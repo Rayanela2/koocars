@@ -363,3 +363,35 @@ footer {
 .load-more-btn { background: transparent; border: 1px solid rgba(201,168,76,0.4); color: #C9A84C; padding: 14px 40px; border-radius: 2px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
 .load-more-btn:hover { background: rgba(201,168,76,0.1); }
 .loading { text-align: center; padding: 40px; color: #555; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 16px; }
+  .nav-links { gap: 16px; }
+  .nav-links a { font-size: 9px; letter-spacing: 1px; }
+  .nav-cta { padding: 7px 12px; }
+
+  .hero { height: 100svh; }
+  .hero-content { padding-bottom: 320px; }
+  .hero-title { font-size: clamp(40px, 12vw, 60px); letter-spacing: 2px; }
+  .hero-sub { font-size: 10px; letter-spacing: 2px; }
+  .hero-car-anim { width: 280px; height: 120px; }
+  .car-svg { width: 280px; }
+
+  .hero-filter-bar { padding: 16px; }
+  .hero-filter-inner {
+    flex-direction: column; gap: 12px;
+  }
+  .hf-group { min-width: unset; width: 100%; }
+  .hf-group select { width: 100%; }
+  .hf-search { width: 100%; padding: 14px; }
+
+  .search-wrap, .filters, .grid-section { padding-left: 16px; padding-right: 16px; }
+  .cars-grid { grid-template-columns: 1fr; }
+  .filters { gap: 8px; }
+  .filter-btn { padding: 7px 14px; font-size: 10px; }
+
+  .load-more-wrap { padding: 24px 0; }
+
+  footer { padding: 24px 16px; flex-direction: column; gap: 20px; }
+  .footer-infos { flex-direction: column; gap: 8px; }
+}
