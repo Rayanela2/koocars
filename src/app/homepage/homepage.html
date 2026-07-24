@@ -1,0 +1,225 @@
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">KOO<span>CARS</span></div>
+  <div class="nav-links">
+    <a href="#">Catalogue</a>
+    <a href="#">Importation</a>
+    <a href="#">À propos</a>
+    <a routerLink="/contact" class="nav-cta">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-flag">🇰🇷</div>
+    <h1 class="hero-title">KooCars</h1>
+    <p class="hero-sub">Importez de Corée, roulez en confiance</p>
+    <div class="hero-car-anim">
+      <svg class="car-svg" width="380" height="180" viewBox="0 0 420 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 130 Q65 90 100 72 L160 55 Q190 42 230 40 L290 40 Q330 40 350 55 L380 80 Q395 95 398 115 L400 130 Z" fill="#1C1C1C" stroke="#C9A84C" stroke-width="1.5"/>
+        <path d="M130 72 Q150 38 190 28 L260 26 Q300 26 320 40 L350 55 L290 40 L230 40 L160 55 Z" fill="#141414" stroke="#C9A84C" stroke-width="1"/>
+        <path d="M148 68 Q158 42 185 32 L240 30 L240 62 Z" fill="#1a2a3a" stroke="#C9A84C" stroke-width="0.8" opacity="0.9"/>
+        <path d="M245 30 L290 30 Q308 30 318 42 L318 62 L245 62 Z" fill="#1a2a3a" stroke="#C9A84C" stroke-width="0.8" opacity="0.9"/>
+        <rect x="240" y="30" width="5" height="32" fill="#C9A84C" opacity="0.6"/>
+        <rect x="60" y="128" width="340" height="8" rx="2" fill="#111"/>
+        <path d="M368 115 Q395 115 400 130 L400 140 Q380 145 355 140 L355 128 Z" fill="#222" stroke="#C9A84C" stroke-width="1"/>
+        <ellipse cx="385" cy="110" rx="10" ry="6" fill="#C9A84C" opacity="0.9"/>
+        <ellipse cx="385" cy="110" rx="6" ry="3.5" fill="#FFE8A0"/>
+        <rect x="62" y="95" width="12" height="22" rx="3" fill="#C9A84C" opacity="0.7"/>
+        <rect x="64" y="97" width="8" height="18" rx="2" fill="#FF4444" opacity="0.5"/>
+        <text x="200" y="112" font-family="serif" font-size="13" fill="#C9A84C" opacity="0.7" text-anchor="middle" font-weight="bold">KOOCARS</text>
+        <g class="wheel">
+          <circle cx="330" cy="148" r="30" fill="#0d0d0d" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="330" cy="148" r="20" fill="#151515" stroke="#8B6B2A" stroke-width="1"/>
+          <circle cx="330" cy="148" r="7" fill="#C9A84C"/>
+          <line x1="330" y1="128" x2="330" y2="168" stroke="#C9A84C" stroke-width="1.5" opacity="0.7"/>
+          <line x1="310" y1="148" x2="350" y2="148" stroke="#C9A84C" stroke-width="1.5" opacity="0.7"/>
+          <line x1="316" y1="134" x2="344" y2="162" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+          <line x1="344" y1="134" x2="316" y2="162" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+        </g>
+        <g class="wheel">
+          <circle cx="110" cy="148" r="30" fill="#0d0d0d" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="110" cy="148" r="20" fill="#151515" stroke="#8B6B2A" stroke-width="1"/>
+          <circle cx="110" cy="148" r="7" fill="#C9A84C"/>
+          <line x1="110" y1="128" x2="110" y2="168" stroke="#C9A84C" stroke-width="1.5" opacity="0.7"/>
+          <line x1="90" y1="148" x2="130" y2="148" stroke="#C9A84C" stroke-width="1.5" opacity="0.7"/>
+          <line x1="96" y1="134" x2="124" y2="162" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+          <line x1="124" y1="134" x2="96" y2="162" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+        </g>
+        <ellipse cx="220" cy="180" rx="160" ry="8" fill="rgba(0,0,0,0.35)"/>
+      </svg>
+      <div class="hero-road"><div class="hero-road-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BARRE FILTRE -->
+  <div class="hero-filter-bar">
+    <div class="hero-filter-inner">
+      <div class="hf-group">
+        <label>Marque</label>
+        <select [(ngModel)]="filterMarque" (change)="onHeroFilter()">
+          <option value="">Toutes</option>
+          <option value="hyundai">Hyundai</option>
+          <option value="kia">Kia</option>
+          <option value="genesis">Genesis</option>
+          <option value="audi">Audi</option>
+          <option value="bmw">BMW</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="volkswagen">Volkswagen</option>
+          <option value="toyota">Toyota</option>
+          <option value="porsche">Porsche</option>
+          <option value="lexus">Lexus</option>
+        </select>
+      </div>
+      <div class="hf-group">
+        <label>Carburant</label>
+        <select [(ngModel)]="filterCarburant" (change)="onHeroFilter()">
+          <option value="">Tous</option>
+          <option value="essence">Essence</option>
+          <option value="diesel">Diesel</option>
+          <option value="électrique">Électrique</option>
+          <option value="hybride">Hybride</option>
+        </select>
+      </div>
+      <div class="hf-group">
+        <label>Année min</label>
+        <select [(ngModel)]="filterAnnee" (change)="onHeroFilter()">
+          <option value="">Toutes</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+        </select>
+      </div>
+      <div class="hf-group">
+        <label>Budget max</label>
+        <select [(ngModel)]="filterBudget" (change)="onHeroFilter()">
+          <option value="">Tous</option>
+          <option value="10000">10 000 €</option>
+          <option value="20000">20 000 €</option>
+          <option value="30000">30 000 €</option>
+          <option value="50000">50 000 €</option>
+          <option value="100000">100 000 €</option>
+        </select>
+      </div>
+      <button class="hf-search" (click)="onHeroFilter()">Rechercher</button>
+    </div>
+  </div>
+</section>
+
+<app-showcase />
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-bar">
+    <svg width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Rechercher par marque, modèle… (ex: Kia, Tucson)"
+    />
+    <span class="search-count">{{ filteredCars.length }} véhicule{{ filteredCars.length > 1 ? 's' : '' }}</span>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  @for (f of [['all','Tous'],['Hyundai','Hyundai'],['Kia','Kia'],['Genesis','Genesis'],['BMW','BMW'],['Porsche','Porsche'],['Audi','Audi']]; track f[0]) {
+    <button class="filter-btn" [class.active]="activeFilter === f[0]" (click)="setFilter(f[0])">{{ f[1] }}</button>
+  }
+</div>
+
+<!-- GRID -->
+<section class="grid-section">
+  <div class="section-header">
+    <div class="section-title">Catalogue</div>
+    <div class="section-sub">Import direct · Corée du Sud</div>
+  </div>
+
+  @if (loading && cars.length === 0) {
+    <div class="loading-initial">
+      <div class="loading-spinner"></div>
+      <div>Chargement du catalogue...</div>
+    </div>
+  }
+
+  <div class="cars-grid">
+    @for (car of filteredCars; track car.id) {
+      <div class="car-card" (click)="openModal(car)">
+        <div class="car-img">
+          @if (car.photo) {
+            <img [src]="car.photo" [alt]="car.marque" class="car-photo" />
+          } @else {
+            <div class="car-img-placeholder">🚗</div>
+          }
+          @if (car.badge && !isKorean(car.badge)) {
+            <div class="car-badge">{{ car.badge }}</div>
+          }
+        </div>
+        <div class="car-body">
+          <div class="car-marque">{{ car.marque }}</div>
+          <div class="car-name">
+            {{ cleanText(car.modele) || car.marque }} {{ car.annee }}
+          </div>
+          <div class="car-specs">
+            <div class="spec"><div class="spec-dot"></div><span class="spec-val">{{ car.annee }}</span></div>
+            <div class="spec"><div class="spec-dot"></div><span class="spec-val">{{ formatKm(car.km) }}</span></div>
+            <div class="spec"><div class="spec-dot"></div><span class="spec-val">{{ car.carburant }}</span></div>
+          </div>
+          <div class="car-footer">
+            <div>
+              <div class="car-price">{{ formatPrix(car.prix) }}</div>
+              <div class="car-price-sub">Import direct Corée</div>
+            </div>
+            <button class="btn-detail">Détails</button>
+          </div>
+        </div>
+      </div>
+    }
+    @if (filteredCars.length === 0 && !loading) {
+      <div class="no-results">
+        <h3>Aucun résultat</h3>
+        <p>Essayez un autre terme de recherche.</p>
+      </div>
+    }
+  </div>
+
+  @if (!loading && cars.length >= limit) {
+    <div class="load-more-wrap">
+      <button class="load-more-btn" (click)="loadMore()">Charger plus de véhicules</button>
+    </div>
+  }
+  @if (loading && cars.length > 0) {
+    <div class="loading">Chargement...</div>
+  }
+</section>
+
+<!-- FLOATING BUBBLES -->
+<div class="floating-bubbles">
+  <a href="tel:+33609075226" class="float-bubble phone">📞</a>
+  <a href="https://wa.me/33609075226" target="_blank" class="float-bubble mail">💬</a>
+</div>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-logo">KOOCARS</div>
+    <div class="footer-map">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624!2d2.5970!3d48.8800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6111198ee052b%3A0xecb3c23b3e860cdb!2s7%20Rue%20Henri%20Becquerel%2C%2077500%20Chelles!5e0!3m2!1sfr!2sfr!4v1234567890"
+        width="100%" height="180" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="footer-infos">
+      <div class="footer-info-item">📍 7 Rue Henri Becquerel, 77500 Chelles</div>
+      <div class="footer-info-item"><a href="tel:0609075226">📞 06 09 07 52 26</a></div>
+      <div class="footer-info-item"><a href="tel:0744924343">📞 07 44 92 43 43</a></div>
+    </div>
+    <div class="footer-copy">© 2026 KooCars — Import Corée du Sud</div>
+  </div>
+</footer>

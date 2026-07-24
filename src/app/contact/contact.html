@@ -1,0 +1,112 @@
+<div class="contact-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo" (click)="retour()">KOO<span>CARS</span></div>
+    <button class="back-btn" (click)="retour()">← Retour au catalogue</button>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="contact-header">
+    <div class="contact-eyebrow">Nous trouver</div>
+    <h1 class="contact-title">Contact</h1>
+  </div>
+
+  <div class="contact-body">
+
+    <!-- INFOS -->
+    <div class="contact-infos">
+
+      <!-- ADRESSE -->
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <div>
+          <div class="info-label">Adresse</div>
+          <div class="info-val">7 Rue Henri Becquerel</div>
+          <div class="info-val">77500 Chelles</div>
+        </div>
+      </div>
+
+      <!-- TÉLÉPHONES -->
+      <div class="info-card">
+        <div class="info-icon">📞</div>
+        <div>
+          <div class="info-label">Téléphones</div>
+          <a href="tel:0609075226" class="info-val info-link">06 09 07 52 26</a>
+          <a href="tel:0744924343" class="info-val info-link">07 44 92 43 43</a>
+        </div>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="info-card">
+        <div class="info-icon">💬</div>
+        <div>
+          <div class="info-label">WhatsApp</div>
+          <a href="https://wa.me/33609075226" target="_blank" class="info-val info-link">06 09 07 52 26</a>
+          <a href="https://wa.me/33744924343" target="_blank" class="info-val info-link">07 44 92 43 43</a>
+        </div>
+      </div>
+
+      <!-- HORAIRES -->
+      <div class="info-card">
+        <div class="info-icon">🕐</div>
+        <div>
+          <div class="info-label">Horaires</div>
+          <div class="info-val">Lun – Sam : 9h00 – 19h00</div>
+          <div class="info-val muted">Dimanche : Sur rendez-vous</div>
+        </div>
+      </div>
+
+      <!-- ACTIONS RAPIDES -->
+      <div class="contact-actions">
+        <a href="tel:0609075226" class="action-btn phone">📞 Appeler</a>
+        <a href="https://wa.me/33609075226" target="_blank" class="action-btn whatsapp">💬 WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- CARTE + FORMULAIRE -->
+    <div class="contact-right">
+
+      <!-- GOOGLE MAPS -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624!2d2.5970!3d48.8800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6111198ee052b%3A0xecb3c23b3e860cdb!2s7%20Rue%20Henri%20Becquerel%2C%2077500%20Chelles!5e0!3m2!1sfr!2sfr!4v1234567890"
+          width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <!-- FORMULAIRE -->
+      <div class="contact-form-wrap">
+        <div class="form-title">Envoyer un message</div>
+        @if (!sent) {
+          <div class="contact-form">
+            <div class="form-group">
+              <label>Nom complet</label>
+              <input type="text" [(ngModel)]="nom" placeholder="Jean Dupont" />
+            </div>
+            <div class="form-group">
+              <label>Téléphone</label>
+              <input type="tel" [(ngModel)]="telephone" placeholder="06 00 00 00 00" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="email" placeholder="jean@email.com" />
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea [(ngModel)]="message" rows="4" placeholder="Votre message..."></textarea>
+            </div>
+            <button class="form-submit" (click)="envoyer()">Envoyer</button>
+          </div>
+        } @else {
+          <div class="form-success">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Message envoyé !</div>
+            <div class="success-sub">Nous vous recontacterons rapidement.</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

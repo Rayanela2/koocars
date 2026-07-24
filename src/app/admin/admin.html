@@ -1,0 +1,141 @@
+<div class="admin-page">
+
+  <!-- LOGIN -->
+  @if (!isLoggedIn) {
+    <div class="login-wrap">
+      <div class="login-box">
+        <div class="login-logo">KOO<span>CARS</span></div>
+        <div class="login-title">Espace Admin</div>
+        @if (loginError) { <div class="login-error">{{ loginError }}</div> }
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="email" placeholder="admin@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="login()" />
+        </div>
+        <button class="login-btn" (click)="login()">Se connecter</button>
+      </div>
+    </div>
+  }
+
+  <!-- DASHBOARD -->
+  @if (isLoggedIn) {
+    <nav class="admin-nav">
+      <div class="nav-logo">KOO<span>CARS</span> <span class="admin-tag">ADMIN</span></div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </nav>
+
+    <div class="admin-body">
+
+      <!-- FORMULAIRE AJOUT -->
+      <div class="admin-section">
+        <div class="section-title">Ajouter un véhicule</div>
+
+        @if (success) {
+          <div class="alert-success">✅ Véhicule ajouté avec succès !</div>
+        }
+        @if (error) {
+          <div class="alert-error">❌ {{ error }}</div>
+        }
+
+        <div class="add-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Marque *</label>
+              <input type="text" [(ngModel)]="marque" placeholder="ex: Audi" />
+            </div>
+            <div class="form-group">
+              <label>Modèle *</label>
+              <input type="text" [(ngModel)]="modele" placeholder="ex: Q5" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Année</label>
+              <input type="number" [(ngModel)]="annee" />
+            </div>
+            <div class="form-group">
+              <label>Kilométrage</label>
+              <input type="number" [(ngModel)]="km" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Carburant</label>
+              <select [(ngModel)]="carburant">
+                <option>Essence</option>
+                <option>Diesel</option>
+                <option>Électrique</option>
+                <option>Hybride</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Prix (€) *</label>
+              <input type="number" [(ngModel)]="prix" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Badge</label>
+              <select [(ngModel)]="badge">
+                <option value="">Aucun</option>
+                <option>Nouveau</option>
+                <option>Sport</option>
+                <option>Prestige</option>
+                <option>Populaire</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- UPLOAD PHOTO -->
+          <div class="form-group">
+            <label>Photo du véhicule</label>
+            <div class="upload-zone" (click)="fileInput.click()">
+              @if (photoPreview) {
+                <img [src]="photoPreview" class="photo-preview" />
+              } @else {
+                <div class="upload-placeholder">
+                  <span>📷</span>
+                  <div>Cliquez pour ajouter une photo</div>
+                </div>
+              }
+            </div>
+            <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" style="display:none" />
+          </div>
+
+          <button class="submit-btn" (click)="addCar()" [disabled]="loading">
+            {{ loading ? 'Ajout en cours...' : '+ Ajouter le véhicule' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- LISTE VOITURES -->
+      <div class="admin-section">
+        <div class="section-title">Véhicules ({{ cars.length }})</div>
+        <div class="cars-list">
+          @for (car of cars; track car.id) {
+            <div class="car-row">
+              @if (car.photo) {
+                <img [src]="car.photo" class="car-thumb" />
+              } @else {
+                <div class="car-thumb-empty">🚗</div>
+              }
+              <div class="car-info">
+                <div class="car-name">{{ car.marque }} {{ car.modele }}</div>
+                <div class="car-meta">{{ car.annee }} · {{ formatKm(car.km) }} · {{ car.carburant }}</div>
+              </div>
+              <div class="car-prix">{{ formatPrix(car.prix) }}</div>
+              <button class="delete-btn" (click)="deleteCar(car.id)">🗑</button>
+            </div>
+          }
+          @if (cars.length === 0) {
+            <div class="empty">Aucun véhicule ajouté pour l'instant.</div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

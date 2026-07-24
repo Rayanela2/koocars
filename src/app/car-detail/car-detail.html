@@ -1,0 +1,114 @@
+@if (car) {
+<div class="detail-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo" (click)="retour()">KOO<span>CARS</span></div>
+    <button class="back-btn" (click)="retour()">← Retour au catalogue</button>
+  </nav>
+
+  <!-- HERO VOITURE -->
+  <div class="detail-hero">
+    @if (car.photo) {
+      <img [src]="car.photo" [alt]="car.marque" class="detail-hero-img" />
+    }
+    <div class="detail-hero-overlay"></div>
+    <div class="detail-hero-content">
+      <div class="detail-marque">{{ car.marque }}</div>
+      <h1 class="detail-titre">{{ cleanText(car.modele) || car.marque }} {{ car.annee }}</h1>
+      @if (car.badge && !isKorean(car.badge)) {
+        <div class="detail-badge">{{ car.badge }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- CONTENU -->
+  <div class="detail-body">
+
+    <!-- SPECS -->
+    <div class="detail-specs-section">
+      <div class="detail-specs-grid">
+        <div class="detail-spec">
+          <div class="detail-spec-label">Année</div>
+          <div class="detail-spec-val">{{ car.annee }}</div>
+        </div>
+        <div class="detail-spec">
+          <div class="detail-spec-label">Kilométrage</div>
+          <div class="detail-spec-val">{{ formatKm(car.km) }}</div>
+        </div>
+        <div class="detail-spec">
+          <div class="detail-spec-label">Carburant</div>
+          <div class="detail-spec-val">{{ car.carburant }}</div>
+        </div>
+        <div class="detail-spec">
+          <div class="detail-spec-label">Origine</div>
+          <div class="detail-spec-val">🇰🇷 Corée du Sud</div>
+        </div>
+        <div class="detail-spec">
+          <div class="detail-spec-label">Transmission</div>
+          <div class="detail-spec-val">Automatique</div>
+        </div>
+        <div class="detail-spec">
+          <div class="detail-spec-label">État</div>
+          <div class="detail-spec-val">Occasion</div>
+        </div>
+      </div>
+
+      <div class="detail-prix-wrap">
+        <div class="detail-prix-label">Prix estimé</div>
+        <div class="detail-prix">{{ formatPrix(car.prix) }}</div>
+        <div class="detail-prix-sub">Import direct · Contactez-nous pour le prix final</div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="detail-right">
+
+      <!-- ACTIONS RAPIDES -->
+      <div class="detail-actions">
+        <a href="tel:+33609075226" class="action-btn phone">📞 06 09 07 52 26</a>
+        <a href="https://wa.me/33609075226" target="_blank" class="action-btn whatsapp">💬 WhatsApp</a>
+      </div>
+      <div class="detail-actions" style="margin-top: 12px;">
+        <a href="tel:+33744924343" class="action-btn phone">📞 07 44 92 43 43</a>
+      </div>
+
+      <!-- FORMULAIRE -->
+      <div class="detail-form-wrap">
+        <div class="detail-form-title">Demande d'informations</div>
+        <div class="detail-form-sub">
+          Intéressé par ce {{ car.marque }} {{ car.annee }} ?<br>Laissez vos coordonnées, on vous rappelle.
+        </div>
+
+        @if (!sent) {
+          <div class="detail-form">
+            <div class="form-group">
+              <label>Nom complet</label>
+              <input type="text" [(ngModel)]="nom" placeholder="Jean Dupont" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="email" placeholder="jean@email.com" />
+            </div>
+            <div class="form-group">
+              <label>Téléphone</label>
+              <input type="tel" [(ngModel)]="telephone" placeholder="+33 6 00 00 00 00" />
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea [(ngModel)]="message" rows="4" placeholder="Je suis intéressé par ce véhicule..."></textarea>
+            </div>
+            <button class="form-submit" (click)="envoyer()">Envoyer ma demande</button>
+          </div>
+        } @else {
+          <div class="form-success">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Demande envoyée !</div>
+            <div class="success-sub">Nous vous recontacterons dans les plus brefs délais.</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}

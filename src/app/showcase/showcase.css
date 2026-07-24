@@ -1,0 +1,127 @@
+/* CAROUSEL */
+.brands-section {
+  padding: 40px 0;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  background: #080808;
+}
+.brands-label {
+  text-align: center;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(90deg, #C9A84C, #F0D080);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight: 700; margin-bottom: 28px;
+}
+.brands-track-wrap {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+.brands-track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: scroll-brands 24s linear infinite;
+}
+.brands-track:hover { animation-play-state: paused; }
+@keyframes scroll-brands {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.brand-item {
+  padding: 0 48px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  border-right: 1px solid rgba(201,168,76,0.1);
+  flex-shrink: 0;
+  opacity: 0.5; transition: opacity 0.2s;
+  cursor: default;
+}
+.brand-item:hover { opacity: 1; }
+.brand-logo {
+  height: 36px; width: auto; max-width: 100px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s;
+}
+.brand-item:hover .brand-logo {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(40%) saturate(600%) hue-rotate(5deg);
+}
+.brand-nom {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #555;
+}
+
+/* FEATURED */
+.featured-section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 64px 48px;
+}
+.featured-header { text-align: center; margin-bottom: 48px; }
+.featured-eyebrow {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(90deg, #C9A84C, #F0D080);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight: 700; margin-bottom: 12px;
+}
+.featured-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; font-weight: 700;
+  background: linear-gradient(135deg, #C9A84C, #F5E0A0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.featured-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.featured-card {
+  background: #0d0d0d;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 3px; padding: 36px 28px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 10px;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+.featured-card:hover {
+  border-color: rgba(201,168,76,0.6);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(201,168,76,0.12);
+}
+.featured-emoji { font-size: 48px; margin-bottom: 4px; }
+.featured-marque {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(90deg, #C9A84C, #E2C47A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+.featured-modele {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 700; color: #F5F0E8;
+}
+.featured-specs {
+  font-size: 12px; color: #666; display: flex; gap: 8px; align-items: center;
+}
+.dot { color: #C9A84C; }
+.featured-prix {
+  font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700;
+  background: linear-gradient(135deg, #C9A84C, #F5E0A0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-top: 4px;
+}
+.featured-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.4);
+  color: #C9A84C; padding: 10px 24px; border-radius: 2px;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+}
+.featured-btn:hover {
+  background: linear-gradient(135deg, #C9A84C, #E2C47A);
+  border-color: transparent; color: #000; font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .featured-grid { grid-template-columns: 1fr; }
+  .featured-section { padding: 40px 20px; }
+}

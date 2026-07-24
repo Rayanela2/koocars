@@ -1,0 +1,46 @@
+<!-- CAROUSEL MARQUES -->
+<div class="brands-section">
+  <div class="brands-label">Marques disponibles</div>
+  <div class="brands-track-wrap">
+    <div class="brands-track">
+      @for (b of brands; track b.nom) {
+        <div class="brand-item">
+          <img [src]="b.logo" [alt]="b.nom" class="brand-logo" />
+          <span class="brand-nom">{{ b.nom }}</span>
+        </div>
+      }
+      @for (b of brands; track b.nom) {
+        <div class="brand-item">
+          <img [src]="b.logo" [alt]="b.nom" class="brand-logo" />
+          <span class="brand-nom">{{ b.nom }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- VOITURES VEDETTES -->
+<div class="featured-section">
+  <div class="featured-header">
+    <div class="featured-eyebrow">Sélection du moment</div>
+    <h2 class="featured-title">Nos coups de cœur</h2>
+  </div>
+  <div class="featured-grid">
+    @for (car of featured; track car.modele) {
+      <div class="featured-card">
+        <div class="featured-emoji">{{ car.emoji }}</div>
+        <div class="featured-marque">{{ car.marque }}</div>
+        <div class="featured-modele">{{ car.modele }}</div>
+        <div class="featured-specs">
+          <span>{{ car.annee }}</span>
+          <span class="dot">·</span>
+          <span>{{ formatKm(car.km) }}</span>
+          <span class="dot">·</span>
+          <span>{{ car.carburant }}</span>
+        </div>
+        <div class="featured-prix">{{ formatPrix(car.prix) }}</div>
+        <button class="featured-btn">Voir le véhicule</button>
+      </div>
+    }
+  </div>
+</div>
