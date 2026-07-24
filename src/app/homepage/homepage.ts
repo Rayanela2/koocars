@@ -19,6 +19,8 @@ export class Homepage {
     this.loadCars();
   }
 
+menuOpen = false;
+
   searchQuery = '';
   activeFilter = 'all';
   filterMarque = '';

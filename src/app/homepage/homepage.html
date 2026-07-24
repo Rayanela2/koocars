@@ -2,11 +2,20 @@
 <nav>
   <div class="nav-logo">KOO<span>CARS</span></div>
   <div class="nav-links">
-    <a href="#">Catalogue</a>
-    <a href="#">Importation</a>
-    <a href="#">À propos</a>
+    <a href="#" class="nav-desktop">Catalogue</a>
+    <a href="#" class="nav-desktop">Importation</a>
+    <a href="#" class="nav-desktop">À propos</a>
     <a routerLink="/contact" class="nav-cta">Contact</a>
+    <button class="nav-menu-btn" (click)="menuOpen = !menuOpen">☰</button>
   </div>
+  @if (menuOpen) {
+    <div class="nav-dropdown">
+      <a href="#" (click)="menuOpen = false">Catalogue</a>
+      <a href="#" (click)="menuOpen = false">Importation</a>
+      <a href="#" (click)="menuOpen = false">À propos</a>
+      <a routerLink="/contact" (click)="menuOpen = false">Contact</a>
+    </div>
+  }
 </nav>
 
 <!-- HERO -->
