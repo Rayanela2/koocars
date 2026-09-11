@@ -23,7 +23,6 @@
   width: max-content;
   animation: scroll-brands 28s linear infinite;
 }
-.brands-track:hover { animation-play-state: paused; }
 @keyframes scroll-brands {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
