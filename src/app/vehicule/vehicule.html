@@ -1,0 +1,394 @@
+<!-- BANDEAU CATALOGUE — à placer en tout début de vehicule.html, avant la nav ou juste après -->
+<section class="kc-hero">
+  <div class="kc-hero-bg"></div>
+  <div class="kc-hero-overlay"></div>
+  <div class="kc-hero-inner">
+    <div class="kc-hero-mark">KC</div>
+    <div class="kc-hero-eyebrow">Catalogue</div>
+    <h1 class="kc-hero-title">Voitures disponibles à l'import depuis la Corée, à votre disposition</h1>
+    <p class="kc-hero-sub">Véhicules disponibles aux enchères et à l'achat immédiat</p>
+
+    <div class="kc-hero-divider"></div>
+
+    <div class="kc-hero-contact-label">Contactez directement votre conseiller</div>
+
+    <div class="kc-hero-advisors">
+      <!-- TODO: remplacer par les vraies photos/noms/numéros -->
+      <div class="kc-advisor-card">
+        <div class="kc-advisor-avatar">👤</div>
+        <div class="kc-advisor-info">
+          <div class="kc-advisor-name">Nom Prénom</div>
+          <div class="kc-advisor-role">Conseiller import</div>
+        </div>
+        <div class="kc-advisor-actions">
+          <a href="tel:+33600000000" class="kc-advisor-btn kc-advisor-phone">📞 06 00 00 00 00</a>
+          <a href="https://wa.me/33600000000" target="_blank" class="kc-advisor-btn kc-advisor-whatsapp">WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="kc-advisor-card">
+        <div class="kc-advisor-avatar">👤</div>
+        <div class="kc-advisor-info">
+          <div class="kc-advisor-name">Nom Prénom</div>
+          <div class="kc-advisor-role">Conseiller import</div>
+        </div>
+        <div class="kc-advisor-actions">
+          <a href="tel:+33600000000" class="kc-advisor-btn kc-advisor-phone">📞 06 00 00 00 00</a>
+          <a href="https://wa.me/33600000000" target="_blank" class="kc-advisor-btn kc-advisor-whatsapp">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<nav class="vehicule-nav">
+  <div class="nav-logo" routerLink="/" aria-label="Accueil">KOO<span>CARS</span></div>
+  <div class="vehicule-nav-links">
+    <a routerLink="/" class="nav-link">Accueil</a>
+    <a routerLink="/processus" class="nav-link">Processus</a>
+    <a routerLink="/contact" class="vehicule-nav-cta">Contact</a>
+  </div>
+  <button type="button" class="vehicule-menu-btn" (click)="toggleMenu()" aria-label="Ouvrir le menu">
+    ☰
+  </button>
+</nav>
+
+@if (menuOpen) {
+  <div class="vehicule-mobile-menu">
+    <a routerLink="/" (click)="closeMenu()">Accueil</a>
+    <a routerLink="/processus" (click)="closeMenu()">Processus</a>
+    <a routerLink="/contact" (click)="closeMenu()">Contact</a>
+  </div>
+}
+
+<!-- BARRE DE RECHERCHE — à placer juste avant <section class="vehicule-filters"> -->
+<div class="veh-v2-search-wrap">
+  <div class="veh-v2-search-bar">
+    <svg width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+      placeholder="Rechercher par marque, modèle, année… (ex: BMW, X5, 2023)"
+    />
+    <span class="veh-v2-search-count">
+      {{ totalFilteredCount }} véhicule{{ totalFilteredCount > 1 ? 's' : '' }}
+    </span>
+  </div>
+</div>
+
+<div class="veh-v2-layout">
+  <div class="veh-v2-content">
+    <section class="vehicule-filters">
+      <div class="filter-caption">FILTER</div>
+      <h2>Sélectionnez une marque</h2>
+
+      <div class="brand-grid">
+        <button
+          type="button"
+          class="brand-tile all"
+          [class.active]="activeFilter === 'all'"
+          (click)="setFilter('all')"
+        >
+          <span class="brand-name">TOUTES</span>
+          <span class="brand-count">{{ totalVehicules }}</span>
+        </button>
+
+        @for (brand of brandTiles; track brand.nom) {
+          <button
+            type="button"
+            class="brand-tile"
+            [class.active]="activeFilter === brand.nom.toLowerCase()"
+            (click)="setFilter(brand.nom.toLowerCase())"
+          >
+            @if (brand.logo) {
+              <img [src]="brand.logo" [alt]="brand.nom" class="brand-logo" />
+            } @else {
+              <span class="brand-fallback">{{ brand.nom.slice(0, 2).toUpperCase() }}</span>
+            }
+            <span class="brand-count">{{ brand.count }}</span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <section class="veh-v2-grid-section">
+      <div class="veh-v2-grid">
+        @for (car of filteredCars; track car.id) {
+          <div class="veh-v2-card" (click)="openDetail(car)">
+            <div class="veh-v2-img">
+              <img [src]="car.photo" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" />
+            </div>
+            <div class="veh-v2-body">
+              <div class="veh-v2-marque">{{ car.marque }}</div>
+              <div class="veh-v2-name">{{ cleanText(car.modele) || car.marque }} {{ car.annee }}</div>
+              <div class="veh-v2-specs">
+                <span>{{ car.annee }}</span>
+                <span>{{ formatKm(car.km) }}</span>
+                <span>{{ car.carburant }}</span>
+              </div>
+              <div class="veh-v2-footer">
+                <div class="veh-v2-price">{{ formatPrix(car.prixFinal) }}</div>
+                <button class="veh-v2-btn" (click)="$event.stopPropagation(); openDetail(car)">Détails</button>
+              </div>
+            </div>
+          </div>
+        }
+        @if (filteredCars.length === 0) {
+          <div class="veh-v2-empty">Aucun véhicule pour cette marque.</div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <aside class="side-v2-panel">
+    <div class="side-v2-head">
+      <h3><span class="side-v2-bar"></span>Filtres</h3>
+      <button type="button" class="side-v2-reset" (click)="resetFilters()">Réinitialiser</button>
+    </div>
+
+    <div class="side-v2-origin">
+      <button
+        type="button"
+        class="side-v2-origin-btn"
+        [class.active]="filterOrigine === 'coree'"
+        (click)="setOrigine('coree')"
+        title="Stock Corée"
+      >
+        🇰🇷
+      </button>
+      <button
+        type="button"
+        class="side-v2-origin-btn"
+        [class.active]="filterOrigine === 'france'"
+        (click)="setOrigine('france')"
+        title="Stock France"
+      >
+        🇫🇷
+      </button>
+    </div>
+
+    <div class="side-v2-achat">
+      <button
+        type="button"
+        class="side-v2-achat-btn"
+        [class.active]="filterAchat === 'encheres'"
+        (click)="setAchat('encheres')"
+      >
+        Enchères
+      </button>
+      <button
+        type="button"
+        class="side-v2-achat-btn"
+        [class.active]="filterAchat === 'stock'"
+        (click)="setAchat('stock')"
+      >
+        Stock <span class="side-v2-achat-sub">(achat direct)</span>
+      </button>
+    </div>
+
+    <label class="side-v2-checkbox">
+      <input
+        type="checkbox"
+        [checked]="filterAchat === 'both'"
+        (change)="setAchat('both')"
+      />
+      Afficher les deux types
+    </label>
+
+    <div class="side-v2-field">
+      <label>Marque</label>
+      <div class="side-v2-custom-select" [class.open]="brandMenuOpen">
+        <button type="button" class="side-v2-select-trigger" (click)="toggleBrandMenu()">
+          <span>{{ selectedBrandLabel }}</span>
+          <span class="side-v2-caret">▾</span>
+        </button>
+        @if (brandMenuOpen) {
+          <div class="side-v2-select-menu">
+            <input
+              type="text"
+              [(ngModel)]="brandSearch"
+              placeholder="Rechercher une marque"
+              class="side-v2-select-search"
+            />
+            <div class="side-v2-select-options">
+              <button type="button" class="side-v2-select-option" [class.active]="activeFilter === 'all'" (click)="selectBrand('all')">
+                Toutes les marques
+              </button>
+              @for (b of filteredBrandTiles; track b.nom) {
+                <button type="button" class="side-v2-select-option" [class.active]="activeFilter === b.nom.toLowerCase()" (click)="selectBrand(b.nom.toLowerCase())">
+                  {{ b.nom }} ({{ b.count }})
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="side-v2-field">
+      <label>Modèle</label>
+      <div class="side-v2-custom-select" [class.open]="modeleMenuOpen">
+        <button type="button" class="side-v2-select-trigger" (click)="toggleModeleMenu()">
+          <span>{{ selectedModeleLabel }}</span>
+          <span class="side-v2-caret">▾</span>
+        </button>
+        @if (modeleMenuOpen) {
+          <div class="side-v2-select-menu">
+            <input
+              type="text"
+              [(ngModel)]="modeleSearch"
+              placeholder="Rechercher un modèle"
+              class="side-v2-select-search"
+            />
+            <div class="side-v2-select-options">
+              <button type="button" class="side-v2-select-option" [class.active]="!filterModele" (click)="selectModele('')">
+                Tous les modèles
+              </button>
+              @for (m of filteredModelesDisponibles; track m) {
+                <button type="button" class="side-v2-select-option" [class.active]="filterModele === m" (click)="selectModele(m)">
+                  {{ m }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="side-v2-field">
+      <label>Carburant</label>
+      <div class="side-v2-custom-select" [class.open]="carburantMenuOpen">
+        <button type="button" class="side-v2-select-trigger" (click)="toggleCarburantMenu()">
+          <span>{{ selectedCarburantLabel }}</span>
+          <span class="side-v2-caret">▾</span>
+        </button>
+        @if (carburantMenuOpen) {
+          <div class="side-v2-select-menu">
+            <input
+              type="text"
+              [(ngModel)]="carburantSearch"
+              placeholder="Rechercher un carburant"
+              class="side-v2-select-search"
+            />
+            <div class="side-v2-select-options">
+              <button type="button" class="side-v2-select-option" [class.active]="!filterCarburant" (click)="selectCarburant('')">
+                Tous les carburants
+              </button>
+              @for (f of filteredCarburantsDisponibles; track f) {
+                <button type="button" class="side-v2-select-option" [class.active]="filterCarburant === f" (click)="selectCarburant(f)">
+                  {{ f }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="side-v2-row">
+      <div class="side-v2-field">
+        <label>Année min</label>
+        <input type="number" [(ngModel)]="filterAnneeMin" placeholder="Min" />
+      </div>
+      <div class="side-v2-field">
+        <label>Année max</label>
+        <input type="number" [(ngModel)]="filterAnneeMax" placeholder="Max" />
+      </div>
+    </div>
+
+    <div class="side-v2-row">
+      <div class="side-v2-field">
+        <label>Km min</label>
+        <input type="number" [(ngModel)]="filterKmMin" placeholder="Min" />
+      </div>
+      <div class="side-v2-field">
+        <label>Km max</label>
+        <input type="number" [(ngModel)]="filterKmMax" placeholder="Max" />
+      </div>
+    </div>
+  </aside>
+</div>
+<!-- FICHE DÉTAIL — modal, s'ouvre au clic sur n'importe quel véhicule -->
+<!-- FICHE DÉTAIL — modal -->
+@if (selectedCar) {
+  <div class="det-v2-overlay" (click)="closeDetail()">
+    <div class="det-v2-modal" (click)="$event.stopPropagation()">
+      <button type="button" class="det-v2-close" (click)="closeDetail()">✕</button>
+
+      <div class="det-v2-photo">
+        <img [src]="selectedCar.photo" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
+      </div>
+
+      <div class="det-v2-body">
+        <div class="det-v2-brand">{{ selectedCar.marque }}</div>
+        <h2 class="det-v2-title">
+          {{ cleanText(selectedCar.modele) || selectedCar.marque }}
+        </h2>
+        @if (selectedCar.badge_technique && cleanText(selectedCar.badge_technique)) {
+          <div class="det-v2-badge">{{ cleanText(selectedCar.badge_technique) }}</div>
+        }
+
+        <div class="det-v2-price-box">
+          <div class="det-v2-price-label">Prix, import inclus</div>
+          <div class="det-v2-price-value">{{ formatPrix(selectedCar.prixFinal) }}</div>
+          <div class="det-v2-price-note">Douane, TVA, transport et frais inclus</div>
+        </div>
+
+        <div class="det-v2-specs">
+          <div class="det-v2-spec-row">
+            <span>Année</span>
+            <strong>{{ selectedCar.annee }}</strong>
+          </div>
+          <div class="det-v2-spec-row">
+            <span>Kilométrage</span>
+            <strong>{{ formatKm(selectedCar.km) }}</strong>
+          </div>
+          <div class="det-v2-spec-row">
+            <span>Carburant</span>
+            <strong>{{ selectedCar.carburant }}</strong>
+          </div>
+        </div>
+
+        <div class="det-v2-disclaimer">
+          Prix hors carte grise, malus écologique et homologation.
+        </div>
+
+        <div class="det-v2-actions">
+          <a routerLink="/contact" class="det-v2-btn det-v2-btn-primary">
+            Demander des informations
+          </a>
+          <a href="tel:+33600000000" class="det-v2-btn det-v2-btn-phone">
+            Prix final à voir avec <strong>06 00 00 00 00</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+<!-- FLOATING BUBBLES -->
+<div class="floating-bubbles">
+  <a href="tel:+33609075226" class="float-bubble phone">📞</a>
+  <a href="https://wa.me/33609075226" target="_blank" class="float-bubble mail">💬</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-logo">KOOCARS</div>
+    <div class="footer-map">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624!2d2.5970!3d48.8800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6111198ee052b%3A0xecb3c23b3e860cdb!2s7%20Rue%20Henri%20Becquerel%2C%2077500%20Chelles!5e0!3m2!1sfr!2sfr!4v1234567890"
+        width="100%" height="180" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="footer-infos">
+      <div class="footer-info-item">📍 7 Rue Henri Becquerel, 77500 Chelles</div>
+      <div class="footer-info-item"><a href="tel:0609075226">📞 06 09 07 52 26</a></div>
+      <div class="footer-info-item"><a href="tel:0744924343">📞 07 44 92 43 43</a></div>
+    </div>
+    <div class="footer-copy">© 2026 KooCars — Import Corée du Sud</div>
+  </div>
+</footer>

@@ -1,46 +1,57 @@
-<!-- CAROUSEL MARQUES -->
-<div class="brands-section">
+<!-- CAROUSEL DES MARQUES -->
+<section class="brands-section">
   <div class="brands-label">Marques disponibles</div>
   <div class="brands-track-wrap">
     <div class="brands-track">
-      @for (b of brands; track b.nom) {
+      @for (item of brands; track item.nom) {
         <div class="brand-item">
-          <img [src]="b.logo" [alt]="b.nom" class="brand-logo" />
-          <span class="brand-nom">{{ b.nom }}</span>
+          <img class="brand-logo" [src]="item.logo" [alt]="item.nom" />
+          <div class="brand-nom">{{ item.nom }}</div>
         </div>
       }
-      @for (b of brands; track b.nom) {
+      @for (item of brands; track item.nom) {
         <div class="brand-item">
-          <img [src]="b.logo" [alt]="b.nom" class="brand-logo" />
-          <span class="brand-nom">{{ b.nom }}</span>
+          <img class="brand-logo" [src]="item.logo" [alt]="item.nom" />
+          <div class="brand-nom">{{ item.nom }}</div>
         </div>
       }
     </div>
   </div>
-</div>
+</section>
 
-<!-- VOITURES VEDETTES -->
-<div class="featured-section">
-  <div class="featured-header">
-    <div class="featured-eyebrow">Sélection du moment</div>
-    <h2 class="featured-title">Nos coups de cœur</h2>
-  </div>
-  <div class="featured-grid">
-    @for (car of featured; track car.modele) {
-      <div class="featured-card">
-        <div class="featured-emoji">{{ car.emoji }}</div>
-        <div class="featured-marque">{{ car.marque }}</div>
-        <div class="featured-modele">{{ car.modele }}</div>
-        <div class="featured-specs">
-          <span>{{ car.annee }}</span>
-          <span class="dot">·</span>
-          <span>{{ formatKm(car.km) }}</span>
-          <span class="dot">·</span>
-          <span>{{ car.carburant }}</span>
+<!-- NOTRE APPROCHE -->
+<section class="approche-v2">
+  <div class="section-inner">
+    <div class="eyebrow center">NOTRE APPROCHE</div>
+    <h2 class="heading-xl center">
+      Recherche, importation de Tout Types de vehicule <span class="gold-text">clé en main</span>
+    </h2>
+    <p class="section-sub-v2 center">Trois piliers qui définissent notre engagement envers chaque client.</p>
+
+    <div class="approche-grid">
+      <article class="approche-card">
+        <div class="approche-photo photo-transparence">
+          <div class="approche-icon">👁️</div>
         </div>
-        <div class="featured-prix">{{ formatPrix(car.prix) }}</div>
-        <button class="featured-btn">Voir le véhicule</button>
-      </div>
-    }
+        <h4>Transparence</h4>
+        <p>Chaque véhicule est inspecté avec soin avant l'achat, garantissant un suivi et une traçabilité totale.</p>
+      </article>
+
+      <article class="approche-card">
+        <div class="approche-photo photo-processus">
+          <div class="approche-icon">✍️</div>
+        </div>
+        <h4>Maîtrise du processus</h4>
+        <p>Chaque étape de l'importation est encadrée avec rigueur et précision, pour un déroulement fluide et sans surprise.</p>
+      </article>
+
+      <article class="approche-card">
+        <div class="approche-photo photo-accompagnement">
+          <div class="approche-icon">🔑</div>
+        </div>
+        <h4>Accompagnement clé en main</h4>
+        <p>De la sélection du véhicule à sa livraison, nous gérons chaque détail pour vous livrer un véhicule prêt à rouler.</p>
+      </article>
+    </div>
   </div>
-</div>
+</section>
