@@ -129,7 +129,10 @@
                 <span>{{ car.carburant }}</span>
               </div>
               <div class="veh-v2-footer">
-                <div class="veh-v2-price">{{ formatPrix(car.prixFinal) }}</div>
+                <div class="veh-v2-price-wrap">
+                  <div class="veh-v2-price">{{ formatPrix(car.prixFinal) }}</div>
+                  <div class="veh-v2-price-note">Hors CG, malus et homologation</div>
+                </div>
                 <button class="veh-v2-btn" (click)="$event.stopPropagation(); openDetail(car)">Détails</button>
               </div>
             </div>
@@ -352,7 +355,7 @@
         </div>
 
         <div class="det-v2-disclaimer">
-          Prix hors carte grise, malus écologique et homologation.
+          Prix hors carte grise, malus et homologation.
         </div>
 
         <div class="det-v2-actions">
