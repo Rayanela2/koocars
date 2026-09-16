@@ -1246,15 +1246,18 @@ footer {
 /* Mobile vehicle catalogue: filters stay visible before the results. */
 @media (max-width: 900px) {
   .veh-v2-layout {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 22px;
     margin-top: 24px;
     padding: 0 16px 48px;
   }
 
   .side-v2-panel {
-    order: -1;
+    display: block !important;
+    visibility: visible;
+    grid-row: 1;
+    order: 0;
     width: 100%;
     max-width: 520px;
     margin: 0 auto;
@@ -1262,6 +1265,7 @@ footer {
   }
 
   .veh-v2-content {
+    grid-row: 2;
     width: 100%;
   }
 
