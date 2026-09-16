@@ -1248,6 +1248,9 @@ footer {
   .veh-v2-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "filters"
+      "content";
     gap: 22px;
     margin-top: 24px;
     padding: 0 16px 48px;
@@ -1256,7 +1259,7 @@ footer {
   .side-v2-panel {
     display: block !important;
     visibility: visible;
-    grid-row: 1;
+    grid-area: filters;
     order: 0;
     width: 100%;
     max-width: 520px;
@@ -1265,7 +1268,7 @@ footer {
   }
 
   .veh-v2-content {
-    grid-row: 2;
+    grid-area: content;
     width: 100%;
   }
 
