@@ -4,16 +4,24 @@
   <div class="brands-track-wrap">
     <div class="brands-track">
       @for (item of brands; track item.nom) {
-        <div class="brand-item">
+        <a
+          class="brand-item"
+          [routerLink]="['/vehicules', item.nom]"
+          [attr.aria-label]="'Voir les véhicules ' + item.nom"
+        >
           <img class="brand-logo" [src]="item.logo" [alt]="item.nom" />
           <div class="brand-nom">{{ item.nom }}</div>
-        </div>
+        </a>
       }
       @for (item of brands; track item.nom) {
-        <div class="brand-item">
+        <a
+          class="brand-item"
+          [routerLink]="['/vehicules', item.nom]"
+          [attr.aria-label]="'Voir les véhicules ' + item.nom"
+        >
           <img class="brand-logo" [src]="item.logo" [alt]="item.nom" />
           <div class="brand-nom">{{ item.nom }}</div>
-        </div>
+        </a>
       }
     </div>
   </div>

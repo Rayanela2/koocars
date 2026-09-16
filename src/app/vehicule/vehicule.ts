@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PricingService } from '../services/pricing.service';
 
@@ -27,7 +27,12 @@ interface Car extends RawCar {
   styleUrl: './vehicule.css',
 })
 export class Vehicule implements OnInit {
-  constructor(private pricing: PricingService) {}
+  constructor(
+    private pricing: PricingService,
+    private route: ActivatedRoute
+  ) {}
+
+  @ViewChild('brandCarousel') brandCarousel?: ElementRef<HTMLElement>;
 
   menuOpen = false;
 
@@ -85,6 +90,13 @@ export class Vehicule implements OnInit {
     this.selectedCar = null;
   }
 
+  scrollBrands(direction: number): void {
+    this.brandCarousel?.nativeElement.scrollBy({
+      left: direction * 270,
+      behavior: 'smooth',
+    });
+  }
+
   limit = 60;
   activeFilter = 'all';
   filterOrigine: 'coree' | 'france' = 'coree';
@@ -103,6 +115,7 @@ export class Vehicule implements OnInit {
   modeleSearch = '';
   carburantMenuOpen = false;
   carburantSearch = '';
+  brandSelectedFromQuery = false;
 
   async ngOnInit(): Promise<void> {
     try {
@@ -127,11 +140,32 @@ export class Vehicule implements OnInit {
           prixFinal: this.pricing.computePrixFinal(c.prix),
         };
       });
+
+      this.applyBrandFromQuery();
     } catch (e) {
       console.error('Impossible de charger le catalogue Encar :', e);
       this.loadError = true;
     } finally {
       this.loading = false;
+    }
+  }
+
+  private applyBrandFromQuery(): void {
+    const requestedBrand = (
+      this.route.snapshot.paramMap.get('marque') ??
+      this.route.snapshot.queryParamMap.get('marque')
+    )?.toLowerCase();
+    if (!requestedBrand) return;
+
+    const matchingBrand = this.brandTiles.find((brand) => {
+      const brandName = brand.nom.toLowerCase();
+      return brandName === requestedBrand || brandName.startsWith(requestedBrand) || requestedBrand.startsWith(brandName);
+    });
+
+    if (matchingBrand) {
+      this.activeFilter = matchingBrand.nom.toLowerCase();
+      this.brandSelectedFromQuery = true;
+      this.limit = 60;
     }
   }
 
@@ -144,6 +178,8 @@ export class Vehicule implements OnInit {
   }
 
   private matchesFilters(c: Car): boolean {
+    if (this.filterOrigine === 'france') return false;
+
     const matchMarque = this.activeFilter === 'all' || c.marque.toLowerCase() === this.activeFilter;
     const matchModele = !this.filterModele || c.modele === this.filterModele;
     const matchCarburant = !this.filterCarburant || c.carburant === this.filterCarburant;
@@ -180,6 +216,10 @@ export class Vehicule implements OnInit {
     return this.cars.length;
   }
 
+  get showBrandSelection(): boolean {
+    return !this.brandSelectedFromQuery && !(this.activeFilter !== 'all' && this.filterModele !== '');
+  }
+
   get totalMarques(): number {
     return new Set(this.cars.map((c) => (c.marque || '').toLowerCase())).size;
   }
@@ -189,7 +229,11 @@ export class Vehicule implements OnInit {
   }
 
   get modelesDisponibles(): string[] {
-    return Array.from(new Set(this.cars.map((c) => c.modele))).sort();
+    const carsForBrand =
+      this.activeFilter === 'all'
+        ? this.cars
+        : this.cars.filter((c) => c.marque.toLowerCase() === this.activeFilter);
+    return Array.from(new Set(carsForBrand.map((c) => c.modele))).sort();
   }
 
   get carburantsDisponibles(): string[] {
@@ -230,6 +274,8 @@ export class Vehicule implements OnInit {
 
   selectBrand(value: string): void {
     this.activeFilter = value;
+    this.filterModele = '';
+    this.modeleSearch = '';
     this.limit = 60;
     this.brandMenuOpen = false;
     this.brandSearch = '';
@@ -290,6 +336,8 @@ export class Vehicule implements OnInit {
 
   setFilter(filter: string): void {
     this.activeFilter = filter;
+    this.filterModele = '';
+    this.modeleSearch = '';
     this.limit = 60;
   }
 

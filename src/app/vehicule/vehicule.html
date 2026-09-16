@@ -17,11 +17,11 @@
       <div class="kc-advisor-card">
         <div class="kc-advisor-avatar">👤</div>
         <div class="kc-advisor-info">
-          <div class="kc-advisor-name">Nom Prénom</div>
+          <div class="kc-advisor-name">Eren</div>
           <div class="kc-advisor-role">Conseiller import</div>
         </div>
         <div class="kc-advisor-actions">
-          <a href="tel:+33600000000" class="kc-advisor-btn kc-advisor-phone">📞 06 00 00 00 00</a>
+          <a href="tel:+33609075226" class="kc-advisor-btn kc-advisor-phone">📞 06 09 07 52 26</a>
           <a href="https://wa.me/33600000000" target="_blank" class="kc-advisor-btn kc-advisor-whatsapp">WhatsApp</a>
         </div>
       </div>
@@ -29,11 +29,11 @@
       <div class="kc-advisor-card">
         <div class="kc-advisor-avatar">👤</div>
         <div class="kc-advisor-info">
-          <div class="kc-advisor-name">Nom Prénom</div>
+          <div class="kc-advisor-name">Enes</div>
           <div class="kc-advisor-role">Conseiller import</div>
         </div>
         <div class="kc-advisor-actions">
-          <a href="tel:+33600000000" class="kc-advisor-btn kc-advisor-phone">📞 06 00 00 00 00</a>
+          <a href="tel:+33744924343" class="kc-advisor-btn kc-advisor-phone">📞 07 44 92 43 43</a>
           <a href="https://wa.me/33600000000" target="_blank" class="kc-advisor-btn kc-advisor-whatsapp">WhatsApp</a>
         </div>
       </div>
@@ -80,11 +80,22 @@
 
 <div class="veh-v2-layout">
   <div class="veh-v2-content">
+    @if (showBrandSelection) {
     <section class="vehicule-filters">
       <div class="filter-caption">FILTER</div>
       <h2>Sélectionnez une marque</h2>
 
-      <div class="brand-grid">
+      <div class="brand-carousel-shell">
+        <button
+          type="button"
+          class="brand-carousel-control brand-carousel-prev"
+          (click)="scrollBrands(-1)"
+          aria-label="Marques précédentes"
+        >
+          ‹
+        </button>
+
+        <div class="brand-grid" #brandCarousel>
         <button
           type="button"
           class="brand-tile all"
@@ -110,8 +121,23 @@
             <span class="brand-count">{{ brand.count }}</span>
           </button>
         }
+        </div>
+
+        <button
+          type="button"
+          class="brand-carousel-control brand-carousel-next"
+          (click)="scrollBrands(1)"
+          aria-label="Marques suivantes"
+        >
+          ›
+        </button>
       </div>
     </section>
+    }
+
+    @if (!showBrandSelection) {
+      <p class="brand-carousel-hint">Pour revoir tous les logos, cliquez sur « Réinitialiser ».</p>
+    }
 
     <section class="veh-v2-grid-section">
       <div class="veh-v2-grid">
@@ -139,7 +165,7 @@
           </div>
         }
         @if (filteredCars.length === 0) {
-          <div class="veh-v2-empty">Aucun véhicule pour cette marque.</div>
+          <div class="veh-v2-empty">Aucun véhicule disponible dans cette catégorie.</div>
         }
       </div>
     </section>

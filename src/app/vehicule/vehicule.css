@@ -120,11 +120,68 @@
 }
 
 .brand-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(68px, 1fr));
-  gap: 12px;
-  max-width: 580px;
+  display: flex;
+  gap: 14px;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 4px 18px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 168, 76, 0.7) transparent;
+}
+
+.brand-grid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.brand-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.brand-grid::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.7);
+  border-radius: 10px;
+}
+
+.brand-carousel-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 700px;
   margin: 0 auto;
+}
+
+.brand-carousel-control {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 54px;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 3px;
+  background: rgba(201, 168, 76, 0.08);
+  color: #C9A84C;
+  font-family: Georgia, serif;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.brand-carousel-control:hover {
+  background: #C9A84C;
+  color: #111;
+}
+
+.brand-carousel-hint {
+  margin: 28px auto 0;
+  color: #C9A84C;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-align: center;
 }
 
 .brand-tile {
@@ -140,6 +197,8 @@
   border-radius: 4px;
   color: #f5f0e8;
   cursor: pointer;
+  flex: 0 0 104px;
+  scroll-snap-align: start;
   transition: all 0.2s ease;
 }
 

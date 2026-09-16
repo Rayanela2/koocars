@@ -10,5 +10,6 @@ export const routes: Routes = [
   { path: 'contact', component: Contact },
   { path: 'admin', component: Admin },
   { path: 'processus', component: Processus },
+  { path: 'vehicules/:marque', component: Vehicule },
   { path: 'vehicules', component: Vehicule },
 ];

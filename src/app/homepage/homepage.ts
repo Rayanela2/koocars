@@ -43,6 +43,10 @@ export class Homepage {
 
   menuOpen = false;
 
+  goToVehicles(): void {
+    this.router.navigate(['/vehicules']);
+  }
+
   searchQuery = '';
   activeFilter = 'all';
   filterMarque = '';

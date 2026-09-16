@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-showcase',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './showcase.html',
   styleUrl: './showcase.css',
 })
