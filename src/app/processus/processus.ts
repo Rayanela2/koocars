@@ -7,4 +7,14 @@ import { RouterLink } from '@angular/router';
   templateUrl: './processus.html',
   styleUrl: './processus.css',
 })
-export class Processus {}
+export class Processus {
+  menuOpen = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+}

@@ -44,6 +44,38 @@
   color: #000 !important; padding: 9px 22px; border-radius: 2px;
   font-weight: 700; box-shadow: 0 2px 16px rgba(201, 168, 76, 0.3);
 }
+.process-menu-btn {
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 4px;
+  background: transparent;
+  color: #c9a84c;
+  font-size: 22px;
+  cursor: pointer;
+}
+.process-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 20px 16px;
+  background: rgba(8, 8, 8, 0.98);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  position: relative;
+  z-index: 19;
+}
+.process-mobile-menu a {
+  padding: 11px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #f5f0e8;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
 
 /* ── BANDEAU ── */
 .opp-v2 {
@@ -135,6 +167,8 @@
   .process-nav { padding: 0 20px; }
   .process-nav-links { gap: 12px; }
   .nav-link { display: none; }
+  .process-menu-btn { display: inline-flex; }
+  .process-mobile-menu { display: flex; }
   .opp-v2, .voy-v2, .why-v2, .cta-final-v2 { padding: 60px 20px; }
   .voy-v2-steps { grid-template-columns: 1fr; }
   .why-v2-grid { grid-template-columns: 1fr; }

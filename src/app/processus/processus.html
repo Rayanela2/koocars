@@ -6,7 +6,24 @@
       <a routerLink="/processus" class="nav-link active">Processus</a>
       <a routerLink="/contact" class="nav-cta">Contact</a>
     </div>
+    <button
+      type="button"
+      class="process-menu-btn"
+      (click)="toggleMenu()"
+      aria-label="Ouvrir le menu"
+    >
+      ☰
+    </button>
   </nav>
+
+  @if (menuOpen) {
+    <div class="process-mobile-menu">
+      <a routerLink="/" (click)="closeMenu()">Accueil</a>
+      <a routerLink="/vehicules" (click)="closeMenu()">Nos véhicules</a>
+      <a routerLink="/processus" (click)="closeMenu()">Processus</a>
+      <a routerLink="/contact" (click)="closeMenu()">Contact</a>
+    </div>
+  }
 
   <!-- BANDEAU -->
   <section class="opp-v2">
