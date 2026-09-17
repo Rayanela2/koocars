@@ -245,7 +245,7 @@ nav {
    ========================================================================== */
 .hero-v2 {
   position: relative; height: 100vh; min-height: 640px;
-  background: url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1600&q=80') center/cover no-repeat;
+  background: url('/image/koocars-hero.png') center/cover no-repeat;
   display: flex; align-items: center; justify-content: center;
 }
 .hero-v2-overlay {
