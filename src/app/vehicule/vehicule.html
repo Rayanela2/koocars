@@ -144,7 +144,7 @@
         @for (car of filteredCars; track car.id) {
           <div class="veh-v2-card" (click)="openDetail(car)">
             <div class="veh-v2-img">
-              <img [src]="car.photo" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" />
+              <img [src]="photoUrl(car.photo)" (error)="onPhotoError($event, car.photo)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" />
             </div>
             <div class="veh-v2-body">
               <div class="veh-v2-marque">{{ car.marque }}</div>
@@ -347,7 +347,7 @@
       <button type="button" class="det-v2-close" (click)="closeDetail()">✕</button>
 
       <div class="det-v2-photo">
-        <img [src]="selectedCar.photo" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
+        <img [src]="photoUrl(selectedCar.photo)" (error)="onPhotoError($event, selectedCar.photo)" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
       </div>
 
       <div class="det-v2-body">

@@ -745,31 +745,37 @@
   background: rgba(201, 168, 76, 0.1);
 }
 
-/* ── Atténuation visuelle du filigrane Encar (vignette CSS renforcée) ── */
-.veh-v2-img {
+/* ── Secours si /api/photo est indisponible : badge « KC » sur le filigrane Encar ── */
+.veh-v2-img,
+.det-v2-photo {
   position: relative;
   overflow: hidden;
+}
+.veh-v2-img.wm-fallback::before,
+.det-v2-photo.wm-fallback::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 64px;
+  aspect-ratio: 1 / 1;
+  z-index: 2;
+  pointer-events: none;
+  /* carré noir « KC / KooCars » */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='.5' y='.5' width='99' height='99' rx='3' fill='%230b0b0b' stroke='%23C9A84C' stroke-opacity='.6'/%3E%3Ctext x='50' y='52' text-anchor='middle' font-family='Georgia,Times New Roman,serif' font-weight='700' font-size='34' letter-spacing='2' fill='%23F0CF6E'%3EKC%3C/text%3E%3Ctext x='50' y='72' text-anchor='middle' font-family='Georgia,Times New Roman,serif' font-weight='700' font-size='13' letter-spacing='1' fill='%23D9B95F'%3EKooCars%3C/text%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.det-v2-photo.wm-fallback::before {
+  top: 10px;
+  right: 10px;
+  width: 96px;
 }
 .veh-v2-img::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 2;
-  background:
-    linear-gradient(180deg, transparent 35%, rgba(5,5,5,0.75) 70%, rgba(5,5,5,0.94) 100%),
-    radial-gradient(ellipse 70% 60% at 88% 92%, rgba(5,5,5,0.92) 0%, rgba(5,5,5,0.6) 45%, transparent 75%);
-}
-.veh-v2-img::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  mask-image: radial-gradient(ellipse 55% 45% at 88% 90%, black 0%, black 40%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 55% 45% at 88% 90%, black 0%, black 40%, transparent 75%);
+  z-index: 3;
+  background: linear-gradient(180deg, transparent 35%, rgba(5,5,5,0.75) 70%, rgba(5,5,5,0.94) 100%);
 }
 .veh-v2-photo {
   filter: contrast(1.05) saturate(0.92) brightness(0.97);

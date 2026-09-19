@@ -169,6 +169,25 @@ export class Vehicule implements OnInit {
     }
   }
 
+  /** À incrémenter quand le traitement des photos change : force navigateur et CDN à recharger. */
+  private static readonly PHOTO_VERSION = 4;
+  private static readonly ENCAR_PHOTO = /^https:\/\/ci\.encar\.com(\/carpicture\d+\/pic\d+\/\d+_\d+\.jpe?g)$/i;
+
+  /** Photo passée par /api/photo, qui retire les marques Encar ; sinon l'URL d'origine. */
+  photoUrl(url: string): string {
+    const m = Vehicule.ENCAR_PHOTO.exec(url);
+    return m ? `/api/photo?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}` : url;
+  }
+
+  /** Si le traitement est indisponible, on revient à l'original (badge KC en CSS par-dessus). */
+  onPhotoError(event: Event, original: string): void {
+    const img = event.target as HTMLImageElement;
+    if (img.dataset['fallback']) return;
+    img.dataset['fallback'] = '1';
+    img.src = original;
+    img.parentElement?.classList.add('wm-fallback');
+  }
+
   loadMore(): void {
     this.limit += 60;
   }
