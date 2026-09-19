@@ -1,9 +1,11 @@
 // Serveur local pour /api/photo pendant `ng serve` (Vercel fait ce travail en production).
 const http = require('http');
 const photo = require('./photo');
+const photos = require('./photos');
 
 http
   .createServer((req, res) => {
+    if (req.url.startsWith('/api/photos')) return photos(req, res);
     if (req.url.startsWith('/api/photo')) {
       // en local, jamais de cache : on voit toujours le dernier traitement
       const setHeader = res.setHeader.bind(res);

@@ -7,7 +7,9 @@ const PATH_RE = /^\/carpicture\d+\/pic\d+\/\d+_\d+\.jpe?g$/i;
 const MAX_BYTES = 5 * 1024 * 1024;
 
 module.exports = async (req, res) => {
-  const p = new URL(req.url, 'http://localhost').searchParams.get('p') || '';
+  const params = new URL(req.url, 'http://localhost').searchParams;
+  const p = params.get('p') || '';
+  const width = Math.min(640, Math.max(0, parseInt(params.get('w') || '0', 10) || 0));
   if (!PATH_RE.test(p)) {
     res.statusCode = 400;
     res.end('bad path');
@@ -20,7 +22,9 @@ module.exports = async (req, res) => {
     const source = Buffer.from(await upstream.arrayBuffer());
     if (source.length > MAX_BYTES) throw new Error('too large');
 
-    const out = await cleanPhoto(source);
+    // « Trust Encar » et la plaque n'existent que sur les premières photos (extérieur, en studio)
+    const index = parseInt((/_(\d+)\.jpe?g$/i.exec(p) || [])[1] || '1', 10);
+    const out = await cleanPhoto(source, { studio: index <= 8, width });
     res.statusCode = 200;
     res.setHeader('Content-Type', 'image/jpeg');
     // les photos d'une annonce ne changent pas : cache CDN long

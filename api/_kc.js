@@ -556,14 +556,14 @@ function badge(x, y, side) {
   );
 }
 
-async function cleanPhoto(input) {
+async function cleanPhoto(input, opts = {}) {
   const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width: w, height: h } = info;
 
   // le nettoyage est calé sur le format des photos Encar (640 px de large) ;
   // les photos studio font 640×360 (ou 366), les autres (concessionnaires) n'ont pas de logo « Trust »
   const encarSize = w === WIDTH;
-  const studio = encarSize && h >= 355 && h <= 370;
+  const studio = opts.studio !== false && encarSize && h >= 355 && h <= 370;
   const bottom = encarSize ? bottomBanner(data, w, h) : null;
   const top = studio ? topLogo(data, w, h) : null;
   const plate = studio ? plateFinder(data, w, h) : null;
@@ -591,10 +591,11 @@ async function cleanPhoto(input) {
   if (plate) marks += kcPaths(plate.cx, plate.cy, plate.size, '#ffffff', 6);
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">${marks}</svg>`;
-  return sharp(out, { raw: { width: w, height: h, channels: 3 } })
-    .composite([{ input: Buffer.from(svg) }])
-    .jpeg({ quality: 88 })
-    .toBuffer();
+  const composed = sharp(out, { raw: { width: w, height: h, channels: 3 } }).composite([{ input: Buffer.from(svg) }]);
+  if (!opts.width) return composed.jpeg({ quality: 88 }).toBuffer();
+  // miniature : le badge doit être posé avant de réduire (sharp redimensionne avant de composer)
+  const flat = await composed.png({ compressionLevel: 1 }).toBuffer();
+  return sharp(flat).resize({ width: opts.width, withoutEnlargement: true }).jpeg({ quality: 80 }).toBuffer();
 }
 
 module.exports = { cleanPhoto };

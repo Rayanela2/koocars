@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PricingService } from '../services/pricing.service';
@@ -29,7 +29,8 @@ interface Car extends RawCar {
 export class Vehicule implements OnInit {
   constructor(
     private pricing: PricingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   @ViewChild('brandCarousel') brandCarousel?: ElementRef<HTMLElement>;
@@ -82,12 +83,54 @@ export class Vehicule implements OnInit {
   // ── Fiche détail (modal) ──
   selectedCar: Car | null = null;
 
+  // Galerie : toutes les photos du véhicule chez Encar (extérieur, moteur, intérieur, détails)
+  gallery: string[] = [];
+  galleryIndex = 0;
+  private galleryToken = 0;
+
   openDetail(car: Car): void {
     this.selectedCar = car;
+    this.gallery = [car.photo];
+    this.galleryIndex = 0;
+    void this.loadGallery(car);
   }
 
   closeDetail(): void {
     this.selectedCar = null;
+    this.gallery = [];
+    this.galleryToken++;
+  }
+
+  private async loadGallery(car: Car): Promise<void> {
+    const m = Vehicule.ENCAR_PHOTO.exec(car.photo);
+    if (!m) return;
+    const token = ++this.galleryToken;
+    try {
+      const response = await fetch(`/api/photos?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}`);
+      if (!response.ok) return;
+      const data = (await response.json()) as { photos?: string[] };
+      // la fiche a pu être fermée ou changée pendant le chargement
+      if (token !== this.galleryToken || this.selectedCar !== car || !data.photos?.length) return;
+      this.gallery = data.photos.map((p) => `https://ci.encar.com${p}`);
+      this.galleryIndex = 0;
+    } catch {
+      // API indisponible : on garde la photo principale seule
+    } finally {
+      this.cdr.markForCheck();
+    }
+  }
+
+  showPhoto(index: number): void {
+    if (!this.gallery.length) return;
+    this.galleryIndex = (index + this.gallery.length) % this.gallery.length;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.selectedCar) return;
+    if (event.key === 'ArrowRight') this.showPhoto(this.galleryIndex + 1);
+    else if (event.key === 'ArrowLeft') this.showPhoto(this.galleryIndex - 1);
+    else if (event.key === 'Escape') this.closeDetail();
   }
 
   scrollBrands(direction: number): void {
@@ -177,6 +220,18 @@ export class Vehicule implements OnInit {
   photoUrl(url: string): string {
     const m = Vehicule.ENCAR_PHOTO.exec(url);
     return m ? `/api/photo?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}` : url;
+  }
+
+  /** Miniature : même traitement, image réduite (plus légère). */
+  thumbUrl(url: string): string {
+    const m = Vehicule.ENCAR_PHOTO.exec(url);
+    return m ? `/api/photo?v=${Vehicule.PHOTO_VERSION}&w=160&p=${m[1]}` : url;
+  }
+
+  /** Photo traitée bien chargée : on retire le badge de secours éventuellement resté d'une photo précédente. */
+  onPhotoLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (!img.dataset['fallback']) img.parentElement?.classList.remove('wm-fallback');
   }
 
   /** Si le traitement est indisponible, on revient à l'original (badge KC en CSS par-dessus). */

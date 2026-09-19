@@ -347,8 +347,24 @@
       <button type="button" class="det-v2-close" (click)="closeDetail()">✕</button>
 
       <div class="det-v2-photo">
-        <img [src]="photoUrl(selectedCar.photo)" (error)="onPhotoError($event, selectedCar.photo)" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
+        @for (p of [gallery[galleryIndex] || selectedCar.photo]; track p) {
+          <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
+        }
+        @if (gallery.length > 1) {
+          <button type="button" class="det-v2-nav det-v2-prev" aria-label="Photo précédente" (click)="showPhoto(galleryIndex - 1)">‹</button>
+          <button type="button" class="det-v2-nav det-v2-next" aria-label="Photo suivante" (click)="showPhoto(galleryIndex + 1)">›</button>
+          <span class="det-v2-count">{{ galleryIndex + 1 }} / {{ gallery.length }}</span>
+        }
       </div>
+      @if (gallery.length > 1) {
+        <div class="det-v2-thumbs">
+          @for (p of gallery; track p; let i = $index) {
+            <button type="button" class="det-v2-thumb" [class.active]="i === galleryIndex" [attr.aria-label]="'Photo ' + (i + 1)" (click)="showPhoto(i)">
+              <img [src]="thumbUrl(p)" loading="lazy" alt="" />
+            </button>
+          }
+        </div>
+      }
 
       <div class="det-v2-body">
         <div class="det-v2-brand">{{ selectedCar.marque }}</div>
