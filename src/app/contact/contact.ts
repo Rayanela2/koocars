@@ -19,8 +19,27 @@ export class Contact {
 
   retour() { this.router.navigate(['/']); }
 
-  envoyer() {
+  // ⬇️ Adresse qui reçoit les messages du formulaire (remplace par la vraie)
+  private readonly EMAIL_DESTINATAIRE = 'koocars93@gmail.com';
+
+  async envoyer() {
     if (!this.nom || !this.telephone) return;
+
+    try {
+      await fetch(`https://formsubmit.co/ajax/${this.EMAIL_DESTINATAIRE}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: `Nouveau message KOOCARS - ${this.nom}`,
+          nom: this.nom,
+          telephone: this.telephone,
+          email: this.email,
+          message: this.message,
+        }),
+      });
+    } catch {
+      // on affiche quand même la confirmation, l'utilisateur a le téléphone/WhatsApp en secours
+    }
     this.sent = true;
   }
 }
