@@ -61,6 +61,7 @@ MANUFACTURER_MAP = {
     "BYD": "BYD",
     "시트로엥/DS": "Citroën/DS",
     "북기은상": "BAIC Yinxiang",
+    "기타 수입차": "Autre importateur",
 }
 
 FUEL_MAP = {
@@ -136,9 +137,33 @@ def transform_vehicle(v):
     }
 
 
+def dedupe_by_id(raw):
+    """Le scraper repasse parfois sur les mêmes annonces (tri par
+    ModifiedDate instable pendant la pagination sur un catalogue qui bouge
+    en continu) : un même véhicule peut apparaître des dizaines de fois.
+    On ne garde qu'une occurrence par Id, sinon les tris/filtres du site
+    (ex: BMW + prix décroissant) n'affichent en pratique qu'une poignée de
+    véhicules distincts, noyés sous leurs propres doublons."""
+    seen = set()
+    unique = []
+    for v in raw:
+        vid = v.get("Id")
+        if vid in seen:
+            continue
+        seen.add(vid)
+        unique.append(v)
+    return unique
+
+
 def main():
     with open(INPUT_FILE, encoding="utf-8") as f:
         raw = json.load(f)
+
+    raw_count = len(raw)
+    raw = dedupe_by_id(raw)
+    doublons = raw_count - len(raw)
+    if doublons:
+        print(f"{doublons} doublon(s) retiré(s) (même Id vu plusieurs fois) sur {raw_count} annonces brutes.")
 
     transformed = [transform_vehicle(v) for v in raw]
 
