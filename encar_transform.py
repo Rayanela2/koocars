@@ -4,7 +4,8 @@ import json
 INPUT_FILE = "encar_vehicules.json"
 OUTPUT_FILE = "cars_from_encar.json"
 
-EUR_PER_KRW = 0.00068
+WON_PER_EUR = 1538
+EUR_PER_KRW = 1 / WON_PER_EUR
 PRICE_UNIT_KRW = 10000
 PHOTO_CDN_BASE = "https://ci.encar.com"
 
