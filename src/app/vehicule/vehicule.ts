@@ -252,8 +252,6 @@ export class Vehicule implements OnInit {
   }
 
   private matchesFilters(c: Car): boolean {
-    if (this.filterOrigine === 'france') return false;
-
     const matchMarque = this.activeFilter === 'all' || c.marque.toLowerCase() === this.activeFilter;
     const matchModele = !this.filterModele || c.modele === this.filterModele;
     const matchCarburant = !this.filterCarburant || c.carburant === this.filterCarburant;
