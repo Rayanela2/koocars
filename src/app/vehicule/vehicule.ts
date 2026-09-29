@@ -150,6 +150,7 @@ export class Vehicule implements OnInit {
   filterAnneeMax: number | null = null;
   filterKmMin: number | null = null;
   filterKmMax: number | null = null;
+  filterTriPrix: '' | 'asc' | 'desc' = '';
   searchQuery = '';
 
   brandMenuOpen = false;
@@ -276,8 +277,16 @@ export class Vehicule implements OnInit {
     );
   }
 
+  setTriPrix(tri: '' | 'asc' | 'desc'): void {
+    this.filterTriPrix = this.filterTriPrix === tri ? '' : tri;
+    this.limit = 60;
+  }
+
   get filteredCars(): Car[] {
-    return this.cars.filter((c) => this.matchesFilters(c)).slice(0, this.limit);
+    const cars = this.cars.filter((c) => this.matchesFilters(c));
+    if (this.filterTriPrix === 'asc') cars.sort((a, b) => a.prixFinal - b.prixFinal);
+    else if (this.filterTriPrix === 'desc') cars.sort((a, b) => b.prixFinal - a.prixFinal);
+    return cars.slice(0, this.limit);
   }
 
   get totalFilteredCount(): number {
@@ -423,6 +432,7 @@ export class Vehicule implements OnInit {
     this.filterAnneeMax = null;
     this.filterKmMin = null;
     this.filterKmMax = null;
+    this.filterTriPrix = '';
     this.searchQuery = '';
     this.limit = 60;
   }

@@ -279,6 +279,28 @@
     </div>
 
     <div class="side-v2-field">
+      <label>Prix</label>
+      <div class="side-v2-achat">
+        <button
+          type="button"
+          class="side-v2-achat-btn"
+          [class.active]="filterTriPrix === 'asc'"
+          (click)="setTriPrix('asc')"
+        >
+          Prix croissant
+        </button>
+        <button
+          type="button"
+          class="side-v2-achat-btn"
+          [class.active]="filterTriPrix === 'desc'"
+          (click)="setTriPrix('desc')"
+        >
+          Prix décroissant
+        </button>
+      </div>
+    </div>
+
+    <div class="side-v2-field">
       <label>Carburant</label>
       <div class="side-v2-custom-select" [class.open]="carburantMenuOpen">
         <button type="button" class="side-v2-select-trigger" (click)="toggleCarburantMenu()">
