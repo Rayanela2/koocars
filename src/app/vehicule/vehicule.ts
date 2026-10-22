@@ -8,6 +8,7 @@ interface RawCar {
   marque: string;
   modele: string;
   badge_technique?: string;
+  motorisation?: string | null; // ex: "2.0L TDI", "1.6L Diesel"
   annee: number;
   km: number;
   carburant: string;

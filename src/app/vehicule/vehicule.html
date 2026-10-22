@@ -152,7 +152,7 @@
               <div class="veh-v2-specs">
                 <span>{{ car.annee }}</span>
                 <span>{{ formatKm(car.km) }}</span>
-                <span>{{ car.carburant }}</span>
+                <span>{{ car.motorisation || car.carburant }}</span>
               </div>
               <div class="veh-v2-footer">
                 <div class="veh-v2-price-wrap">
@@ -408,6 +408,12 @@
             <span>Carburant</span>
             <strong>{{ selectedCar.carburant }}</strong>
           </div>
+          @if (selectedCar.motorisation) {
+            <div class="det-v2-spec-row">
+              <span>Motorisation</span>
+              <strong>{{ selectedCar.motorisation }}</strong>
+            </div>
+          }
         </div>
 
         <div class="det-v2-disclaimer">
