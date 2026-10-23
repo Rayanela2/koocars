@@ -980,6 +980,25 @@
   background: rgba(201, 168, 76, 0.08);
 }
 
+.det-v2-share {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.det-v2-share .det-v2-btn-share {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f0e8 !important;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  font-size: 12px;
+}
+.det-v2-share .det-v2-btn-share:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
 @media (max-width: 640px) {
   .det-v2-modal { max-height: 95vh; }
   .det-v2-photo { height: 220px; }

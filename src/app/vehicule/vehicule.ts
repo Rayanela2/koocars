@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PricingService } from '../services/pricing.service';
 
@@ -9,6 +9,8 @@ interface RawCar {
   modele: string;
   badge_technique?: string;
   motorisation?: string | null; // ex: "2.0L TDI", "1.6L Diesel"
+  moteur_cc?: number | null; // cylindrée brute, ex: 2143
+  transmission?: string | null; // ex: "Automatique", "Manuelle"
   annee: number;
   km: number;
   carburant: string;
@@ -31,6 +33,7 @@ export class Vehicule implements OnInit {
   constructor(
     private pricing: PricingService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -89,17 +92,61 @@ export class Vehicule implements OnInit {
   galleryIndex = 0;
   private galleryToken = 0;
 
-  openDetail(car: Car): void {
+  openDetail(car: Car, fromUrl = false): void {
     this.selectedCar = car;
     this.gallery = [car.photo];
     this.galleryIndex = 0;
     void this.loadGallery(car);
+
+    // Met l'id du véhicule dans l'URL pour qu'elle soit partageable (lien
+    // direct vers cette fiche) — sans créer d'entrée d'historique à chaque clic.
+    if (!fromUrl) {
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { voiture: car.id },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
   }
 
   closeDetail(): void {
     this.selectedCar = null;
     this.gallery = [];
     this.galleryToken++;
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { voiture: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  /** Lien partageable vers la fiche actuellement ouverte. */
+  get shareLink(): string {
+    return window.location.href;
+  }
+
+  linkCopie = false;
+
+  async copierLien(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.shareLink);
+      this.linkCopie = true;
+      setTimeout(() => {
+        this.linkCopie = false;
+        this.cdr.detectChanges();
+      }, 2000);
+    } catch (e) {
+      console.error('Impossible de copier le lien :', e);
+    }
+  }
+
+  partagerWhatsApp(): void {
+    if (!this.selectedCar) return;
+    const texte = `${this.selectedCar.marque} ${this.cleanText(this.selectedCar.modele)} ${this.selectedCar.annee} — ${this.formatPrix(this.selectedCar.prixFinal)}\n${this.shareLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, '_blank');
   }
 
   private async loadGallery(car: Car): Promise<void> {
@@ -187,6 +234,7 @@ export class Vehicule implements OnInit {
       });
 
       this.applyBrandFromQuery();
+      this.applySharedCarFromQuery();
     } catch (e) {
       console.error('Impossible de charger le catalogue Encar :', e);
       this.loadError = true;
@@ -212,6 +260,14 @@ export class Vehicule implements OnInit {
       this.brandSelectedFromQuery = true;
       this.limit = 60;
     }
+  }
+
+  /** Ouvre directement la fiche d'un véhicule si l'URL contient ?voiture=<id> (lien partagé). */
+  private applySharedCarFromQuery(): void {
+    const id = this.route.snapshot.queryParamMap.get('voiture');
+    if (!id) return;
+    const car = this.cars.find((c) => c.id === id);
+    if (car) this.openDetail(car, true);
   }
 
   /** À incrémenter quand le traitement des photos change : force navigateur et CDN à recharger. */

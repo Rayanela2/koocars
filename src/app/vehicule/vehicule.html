@@ -408,10 +408,16 @@
             <span>Carburant</span>
             <strong>{{ selectedCar.carburant }}</strong>
           </div>
-          @if (selectedCar.motorisation) {
+          @if (selectedCar.transmission) {
             <div class="det-v2-spec-row">
-              <span>Motorisation</span>
-              <strong>{{ selectedCar.motorisation }}</strong>
+              <span>Transmission</span>
+              <strong>{{ selectedCar.transmission }}</strong>
+            </div>
+          }
+          @if (selectedCar.moteur_cc) {
+            <div class="det-v2-spec-row">
+              <span>Moteur</span>
+              <strong>{{ selectedCar.moteur_cc }} cc</strong>
             </div>
           }
         </div>
@@ -430,6 +436,15 @@
           <a href="tel:+33744924343" class="det-v2-btn det-v2-btn-phone">
             Prix final à voir avec <strong>07 44 92 43 43</strong>
             </a>
+        </div>
+
+        <div class="det-v2-share">
+          <button type="button" class="det-v2-btn det-v2-btn-share" (click)="copierLien()">
+            {{ linkCopie ? '✅ Lien copié !' : '🔗 Copier le lien de cette fiche' }}
+          </button>
+          <button type="button" class="det-v2-btn det-v2-btn-share" (click)="partagerWhatsApp()">
+            💬 Envoyer par WhatsApp
+          </button>
         </div>
       </div>
     </div>
