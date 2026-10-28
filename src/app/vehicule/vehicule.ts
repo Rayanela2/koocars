@@ -502,6 +502,12 @@ export class Vehicule implements OnInit {
     return `${km.toLocaleString('fr-FR')} km`;
   }
 
+  /** Ex: "2.0L (1995 cc)" si la cylindrée exacte est connue, sinon juste "2.0L". */
+  formatMoteur(cc: number): string {
+    const litres = (cc / 1000).toFixed(1);
+    return `${litres}L (${cc} cc)`;
+  }
+
   isKorean(text: string): boolean {
     if (!text) return false;
     return /[\u3131-\uD79D\u1100-\u11FF]/.test(text);

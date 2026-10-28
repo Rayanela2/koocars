@@ -417,7 +417,7 @@
           @if (selectedCar.moteur_cc) {
             <div class="det-v2-spec-row">
               <span>Moteur</span>
-              <strong>{{ selectedCar.moteur_cc }} cc</strong>
+              <strong>{{ formatMoteur(selectedCar.moteur_cc) }}</strong>
             </div>
           }
         </div>
