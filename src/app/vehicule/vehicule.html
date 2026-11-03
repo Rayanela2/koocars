@@ -144,7 +144,16 @@
         @for (car of filteredCars; track car.id) {
           <div class="veh-v2-card" (click)="openDetail(car)">
             <div class="veh-v2-img">
-              <img [src]="photoUrl(car.photo)" (error)="onPhotoError($event, car.photo)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" />
+              @for (p of [cardPhoto(car)]; track p) {
+                <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" loading="lazy" />
+              }
+              <button type="button" class="veh-v2-nav veh-v2-prev" aria-label="Photo précédente" (click)="cardNav(car, -1, $event)">‹</button>
+              <button type="button" class="veh-v2-nav veh-v2-next" aria-label="Photo suivante" (click)="cardNav(car, 1, $event)">›</button>
+              @if (cardPhotos[car.id]?.length; as total) {
+                @if (total > 1) {
+                  <span class="veh-v2-count">{{ (cardIndex[car.id] ?? 0) + 1 }} / {{ total }}</span>
+                }
+              }
             </div>
             <div class="veh-v2-body">
               <div class="veh-v2-marque">{{ car.marque }}</div>
@@ -153,6 +162,9 @@
                 <span>{{ car.annee }}</span>
                 <span>{{ formatKm(car.km) }}</span>
                 <span>{{ car.motorisation || car.carburant }}</span>
+                @if (car.chevaux) {
+                  <span>{{ car.chevaux }} ch</span>
+                }
               </div>
               <div class="veh-v2-footer">
                 <div class="veh-v2-price-wrap">
@@ -412,6 +424,12 @@
             <div class="det-v2-spec-row">
               <span>Transmission</span>
               <strong>{{ selectedCar.transmission }}</strong>
+            </div>
+          }
+          @if (selectedCar.chevaux) {
+            <div class="det-v2-spec-row">
+              <span>Puissance</span>
+              <strong>{{ selectedCar.chevaux }} ch</strong>
             </div>
           }
           @if (selectedCar.moteur_cc) {

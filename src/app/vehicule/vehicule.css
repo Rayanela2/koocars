@@ -1424,3 +1424,52 @@ footer {
   opacity: 1;
   border-color: #c9a84c;
 }
+
+/* ── Mini-carrousel photos sur les cartes ── */
+.veh-v2-img .veh-v2-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(5, 5, 5, 0.7);
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  color: #f5f0e8;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, border-color 0.2s, color 0.2s;
+}
+.veh-v2-card:hover .veh-v2-nav,
+.veh-v2-nav:focus-visible {
+  opacity: 1;
+}
+.veh-v2-img .veh-v2-nav:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+.veh-v2-prev { left: 8px; }
+.veh-v2-next { right: 8px; }
+.veh-v2-count {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  z-index: 4;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #f5f0e8;
+  background: rgba(5, 5, 5, 0.7);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+/* écrans tactiles : pas de survol, flèches toujours visibles */
+@media (hover: none) {
+  .veh-v2-img .veh-v2-nav {
+    opacity: 1;
+  }
+}

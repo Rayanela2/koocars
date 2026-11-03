@@ -11,6 +11,7 @@ interface RawCar {
   motorisation?: string | null; // ex: "2.0L TDI", "1.6L Diesel"
   moteur_cc?: number | null; // cylindrée brute, ex: 2143
   transmission?: string | null; // ex: "Automatique", "Manuelle"
+  chevaux?: number | null; // puissance en ch, ex: 190
   annee: number;
   km: number;
   carburant: string;
@@ -94,8 +95,8 @@ export class Vehicule implements OnInit {
 
   openDetail(car: Car, fromUrl = false): void {
     this.selectedCar = car;
-    this.gallery = [car.photo];
-    this.galleryIndex = 0;
+    this.gallery = this.cardPhotos[car.id] ?? [car.photo];
+    this.galleryIndex = this.cardIndex[car.id] ?? 0;
     void this.loadGallery(car);
 
     // Met l'id du véhicule dans l'URL pour qu'elle soit partageable (lien
@@ -149,23 +150,58 @@ export class Vehicule implements OnInit {
     window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, '_blank');
   }
 
-  private async loadGallery(car: Car): Promise<void> {
-    const m = Vehicule.ENCAR_PHOTO.exec(car.photo);
-    if (!m) return;
-    const token = ++this.galleryToken;
-    try {
-      const response = await fetch(`/api/photos?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}`);
-      if (!response.ok) return;
-      const data = (await response.json()) as { photos?: string[] };
-      // la fiche a pu être fermée ou changée pendant le chargement
-      if (token !== this.galleryToken || this.selectedCar !== car || !data.photos?.length) return;
-      this.gallery = data.photos.map((p) => `https://ci.encar.com${p}`);
-      this.galleryIndex = 0;
-    } catch {
-      // API indisponible : on garde la photo principale seule
-    } finally {
-      this.cdr.markForCheck();
+  // Photos de chaque véhicule, chargées une seule fois (partagées entre la carte et la fiche)
+  private photosCache = new Map<string, Promise<string[]>>();
+
+  private fetchPhotos(car: Car): Promise<string[]> {
+    let photos = this.photosCache.get(car.id);
+    if (!photos) {
+      photos = (async () => {
+        const m = Vehicule.ENCAR_PHOTO.exec(car.photo);
+        if (!m) return [car.photo];
+        try {
+          const response = await fetch(`/api/photos?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}`);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = (await response.json()) as { photos?: string[] };
+          return data.photos?.length ? data.photos.map((p) => `https://ci.encar.com${p}`) : [car.photo];
+        } catch {
+          // API indisponible : on garde la photo principale seule (et on retentera plus tard)
+          this.photosCache.delete(car.id);
+          return [car.photo];
+        }
+      })();
+      this.photosCache.set(car.id, photos);
     }
+    return photos;
+  }
+
+  private async loadGallery(car: Car): Promise<void> {
+    const token = ++this.galleryToken;
+    const photos = await this.fetchPhotos(car);
+    // la fiche a pu être fermée ou changée pendant le chargement
+    if (token !== this.galleryToken || this.selectedCar !== car) return;
+    this.gallery = photos;
+    // on reprend la photo que l'utilisateur regardait sur la carte
+    this.galleryIndex = Math.min(this.cardIndex[car.id] ?? 0, photos.length - 1);
+    this.cdr.markForCheck();
+  }
+
+  // ── Mini-carrousel sur les cartes du catalogue ──
+  cardPhotos: Record<string, string[]> = {};
+  cardIndex: Partial<Record<string, number>> = {};
+
+  cardPhoto(car: Car): string {
+    return this.cardPhotos[car.id]?.[this.cardIndex[car.id] ?? 0] ?? car.photo;
+  }
+
+  async cardNav(car: Car, direction: number, event: Event): Promise<void> {
+    event.stopPropagation();
+    if (!this.cardPhotos[car.id]) {
+      this.cardPhotos[car.id] = await this.fetchPhotos(car);
+    }
+    const photos = this.cardPhotos[car.id];
+    this.cardIndex[car.id] = ((this.cardIndex[car.id] ?? 0) + direction + photos.length) % photos.length;
+    this.cdr.markForCheck();
   }
 
   showPhoto(index: number): void {
