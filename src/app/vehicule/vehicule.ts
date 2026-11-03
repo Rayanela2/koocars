@@ -160,7 +160,7 @@ export class Vehicule implements OnInit {
         const m = Vehicule.ENCAR_PHOTO.exec(car.photo);
         if (!m) return [car.photo];
         try {
-          const response = await fetch(`/api/photos?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}`);
+          const response = await fetch(`/api/photos?v=${Vehicule.GALLERY_VERSION}&p=${m[1]}`);
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           const data = (await response.json()) as { photos?: string[] };
           return data.photos?.length ? data.photos.map((p) => `https://ci.encar.com${p}`) : [car.photo];
@@ -194,8 +194,17 @@ export class Vehicule implements OnInit {
     return this.cardPhotos[car.id]?.[this.cardIndex[car.id] ?? 0] ?? car.photo;
   }
 
-  async cardNav(car: Car, direction: number, event: Event): Promise<void> {
-    event.stopPropagation();
+  /** Charge la liste des photos dès le survol / toucher : compteur affiché et premier clic instantané. */
+  async preloadCardPhotos(car: Car): Promise<void> {
+    if (this.cardPhotos[car.id] || !car.photo) return;
+    const photos = await this.fetchPhotos(car);
+    this.cardPhotos[car.id] = photos;
+    this.cdr.markForCheck();
+  }
+
+  async cardNav(car: Car, direction: number, event?: Event): Promise<void> {
+    event?.stopPropagation();
+    if (!car.photo) return;
     if (!this.cardPhotos[car.id]) {
       this.cardPhotos[car.id] = await this.fetchPhotos(car);
     }
@@ -204,9 +213,55 @@ export class Vehicule implements OnInit {
     this.cdr.markForCheck();
   }
 
+  // ── Balayage tactile (cartes et fiche) ──
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private swiped = false;
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.swiped = false;
+  }
+
+  /** Renvoie -1 / 1 si le geste est un balayage horizontal, sinon 0. */
+  private swipeDirection(event: TouchEvent): number {
+    const dx = event.changedTouches[0].clientX - this.touchStartX;
+    const dy = event.changedTouches[0].clientY - this.touchStartY;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return 0;
+    return dx < 0 ? 1 : -1;
+  }
+
+  onCardTouchEnd(car: Car, event: TouchEvent): void {
+    const direction = this.swipeDirection(event);
+    if (!direction) return;
+    this.swiped = true;
+    void this.cardNav(car, direction);
+  }
+
+  onGalleryTouchEnd(event: TouchEvent): void {
+    const direction = this.swipeDirection(event);
+    if (direction) this.showPhoto(this.galleryIndex + direction);
+  }
+
+  /** Un balayage sur la photo ne doit pas ouvrir la fiche. */
+  onCardClick(car: Car): void {
+    if (this.swiped) {
+      this.swiped = false;
+      return;
+    }
+    this.openDetail(car);
+  }
+
   showPhoto(index: number): void {
     if (!this.gallery.length) return;
     this.galleryIndex = (index + this.gallery.length) % this.gallery.length;
+    // garde la miniature active visible dans la bande (jusqu'à ~50 photos)
+    setTimeout(() =>
+      document
+        .querySelector('.det-v2-thumb.active')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    );
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -308,6 +363,8 @@ export class Vehicule implements OnInit {
 
   /** À incrémenter quand le traitement des photos change : force navigateur et CDN à recharger. */
   private static readonly PHOTO_VERSION = 4;
+  /** À incrémenter quand /api/photos change (ex: nombre de photos sondées) : invalide la liste en cache. */
+  private static readonly GALLERY_VERSION = 5;
   private static readonly ENCAR_PHOTO = /^https:\/\/ci\.encar\.com(\/carpicture\d+\/pic\d+\/\d+_\d+\.jpe?g)$/i;
 
   /** Photo passée par /api/photo, qui retire les marques Encar ; sinon l'URL d'origine. */

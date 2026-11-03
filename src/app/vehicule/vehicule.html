@@ -142,13 +142,17 @@
     <section class="veh-v2-grid-section">
       <div class="veh-v2-grid">
         @for (car of filteredCars; track car.id) {
-          <div class="veh-v2-card" (click)="openDetail(car)">
-            <div class="veh-v2-img">
-              @for (p of [cardPhoto(car)]; track p) {
-                <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" loading="lazy" />
+          <div class="veh-v2-card" (click)="onCardClick(car)" (mouseenter)="preloadCardPhotos(car)">
+            <div class="veh-v2-img" (touchstart)="onTouchStart($event); preloadCardPhotos(car)" (touchend)="onCardTouchEnd(car, $event)">
+              @if (car.photo) {
+                @for (p of [cardPhoto(car)]; track p) {
+                  <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" loading="lazy" />
+                }
               }
-              <button type="button" class="veh-v2-nav veh-v2-prev" aria-label="Photo précédente" (click)="cardNav(car, -1, $event)">‹</button>
-              <button type="button" class="veh-v2-nav veh-v2-next" aria-label="Photo suivante" (click)="cardNav(car, 1, $event)">›</button>
+              @if (car.photo && cardPhotos[car.id]?.length !== 1) {
+                <button type="button" class="veh-v2-nav veh-v2-prev" aria-label="Photo précédente" (click)="cardNav(car, -1, $event)">‹</button>
+                <button type="button" class="veh-v2-nav veh-v2-next" aria-label="Photo suivante" (click)="cardNav(car, 1, $event)">›</button>
+              }
               @if (cardPhotos[car.id]?.length; as total) {
                 @if (total > 1) {
                   <span class="veh-v2-count">{{ (cardIndex[car.id] ?? 0) + 1 }} / {{ total }}</span>
@@ -372,7 +376,7 @@
     <div class="det-v2-modal" (click)="$event.stopPropagation()">
       <button type="button" class="det-v2-close" (click)="closeDetail()">✕</button>
 
-      <div class="det-v2-photo">
+      <div class="det-v2-photo" (touchstart)="onTouchStart($event)" (touchend)="onGalleryTouchEnd($event)">
         @for (p of [gallery[galleryIndex] || selectedCar.photo]; track p) {
           <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
         }

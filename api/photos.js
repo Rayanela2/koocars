@@ -2,7 +2,8 @@
 // Liste les photos qui existent chez Encar pour ce véhicule (_001, _002, ... avec des trous possibles).
 const ORIGIN = 'https://ci.encar.com';
 const PATH_RE = /^(\/carpicture\d+\/pic\d+\/\d+)_\d+(\.jpe?g)$/i;
-const MAX_INDEX = 40;
+// les annonces Encar vont couramment au-delà de _050 (avec des trous) : on sonde large
+const MAX_INDEX = 80;
 
 async function exists(url) {
   try {
