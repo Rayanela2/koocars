@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChi
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PricingService } from '../services/pricing.service';
+import { KcPhoto } from '../photo/kc-photo.directive';
 
 interface RawCar {
   id: string;
@@ -26,7 +27,7 @@ interface Car extends RawCar {
 
 @Component({
   selector: 'app-vehicule',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, KcPhoto],
   templateUrl: './vehicule.html',
   styleUrl: './vehicule.css',
 })
@@ -160,10 +161,18 @@ export class Vehicule implements OnInit {
         const m = Vehicule.ENCAR_PHOTO.exec(car.photo);
         if (!m) return [car.photo];
         try {
-          const response = await fetch(`/api/photos?v=${Vehicule.GALLERY_VERSION}&p=${m[1]}`);
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const data = (await response.json()) as { photos?: string[] };
-          return data.photos?.length ? data.photos.map((p) => `https://ci.encar.com${p}`) : [car.photo];
+          // deux plages en parallèle : une fonction Cloudflare est limitée à 50 requêtes sortantes
+          const ranges = await Promise.all(
+            [[1, 40], [41, 80]].map(async ([from, to]) => {
+              const response = await fetch(
+                `/api/photos?v=${Vehicule.GALLERY_VERSION}&p=${m[1]}&from=${from}&to=${to}`
+              );
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              return ((await response.json()) as { photos?: string[] }).photos ?? [];
+            })
+          );
+          const photos = ranges.flat();
+          return photos.length ? photos.map((p) => `https://ci.encar.com${p}`) : [car.photo];
         } catch {
           // API indisponible : on garde la photo principale seule (et on retentera plus tard)
           this.photosCache.delete(car.id);
@@ -331,6 +340,8 @@ export class Vehicule implements OnInit {
       this.loadError = true;
     } finally {
       this.loading = false;
+      // application sans Zone.js : rien ne rafraîchit la vue après ce chargement asynchrone
+      this.cdr.markForCheck();
     }
   }
 
@@ -361,38 +372,9 @@ export class Vehicule implements OnInit {
     if (car) this.openDetail(car, true);
   }
 
-  /** À incrémenter quand le traitement des photos change : force navigateur et CDN à recharger. */
-  private static readonly PHOTO_VERSION = 4;
   /** À incrémenter quand /api/photos change (ex: nombre de photos sondées) : invalide la liste en cache. */
-  private static readonly GALLERY_VERSION = 5;
+  private static readonly GALLERY_VERSION = 6;
   private static readonly ENCAR_PHOTO = /^https:\/\/ci\.encar\.com(\/carpicture\d+\/pic\d+\/\d+_\d+\.jpe?g)$/i;
-
-  /** Photo passée par /api/photo, qui retire les marques Encar ; sinon l'URL d'origine. */
-  photoUrl(url: string): string {
-    const m = Vehicule.ENCAR_PHOTO.exec(url);
-    return m ? `/api/photo?v=${Vehicule.PHOTO_VERSION}&p=${m[1]}` : url;
-  }
-
-  /** Miniature : même traitement, image réduite (plus légère). */
-  thumbUrl(url: string): string {
-    const m = Vehicule.ENCAR_PHOTO.exec(url);
-    return m ? `/api/photo?v=${Vehicule.PHOTO_VERSION}&w=160&p=${m[1]}` : url;
-  }
-
-  /** Photo traitée bien chargée : on retire le badge de secours éventuellement resté d'une photo précédente. */
-  onPhotoLoad(event: Event): void {
-    const img = event.target as HTMLImageElement;
-    if (!img.dataset['fallback']) img.parentElement?.classList.remove('wm-fallback');
-  }
-
-  /** Si le traitement est indisponible, on revient à l'original (badge KC en CSS par-dessus). */
-  onPhotoError(event: Event, original: string): void {
-    const img = event.target as HTMLImageElement;
-    if (img.dataset['fallback']) return;
-    img.dataset['fallback'] = '1';
-    img.src = original;
-    img.parentElement?.classList.add('wm-fallback');
-  }
 
   loadMore(): void {
     this.limit += 60;

@@ -146,7 +146,7 @@
             <div class="veh-v2-img" (touchstart)="onTouchStart($event); preloadCardPhotos(car)" (touchend)="onCardTouchEnd(car, $event)">
               @if (car.photo) {
                 @for (p of [cardPhoto(car)]; track p) {
-                  <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" loading="lazy" />
+                  <img [kcPhoto]="p" [alt]="car.marque + ' ' + car.modele" class="veh-v2-photo" />
                 }
               }
               @if (car.photo && cardPhotos[car.id]?.length !== 1) {
@@ -378,7 +378,7 @@
 
       <div class="det-v2-photo" (touchstart)="onTouchStart($event)" (touchend)="onGalleryTouchEnd($event)">
         @for (p of [gallery[galleryIndex] || selectedCar.photo]; track p) {
-          <img [src]="photoUrl(p)" (load)="onPhotoLoad($event)" (error)="onPhotoError($event, p)" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
+          <img [kcPhoto]="p" [alt]="selectedCar.marque + ' ' + selectedCar.modele" />
         }
         @if (gallery.length > 1) {
           <button type="button" class="det-v2-nav det-v2-prev" aria-label="Photo précédente" (click)="showPhoto(galleryIndex - 1)">‹</button>
@@ -390,7 +390,7 @@
         <div class="det-v2-thumbs">
           @for (p of gallery; track p; let i = $index) {
             <button type="button" class="det-v2-thumb" [class.active]="i === galleryIndex" [attr.aria-label]="'Photo ' + (i + 1)" (click)="showPhoto(i)">
-              <img [src]="thumbUrl(p)" loading="lazy" alt="" />
+              <img [kcPhoto]="p" [kcWidth]="160" alt="" />
             </button>
           }
         </div>
